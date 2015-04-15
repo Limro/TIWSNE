@@ -1,0 +1,79 @@
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*Thumbs.db
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+# Object files
+*.o
+
+# Libraries
+*.lib
+*.a
+
+####### Shared objects (inc. Windows DLLs) ####### 
+*.dll
+*.so
+*.so.*
+*.dylib
+
+####### Executables ####### 
+*.exe
+*.out
+*.app
+
+
+####### Latex ####### 
+*.aux
+*.glo
+*.idx
+*.log
+*.toc
+*.ist
+*.acn
+*.acr
+*.alg
+*.bbl
+*.blg
+*.dvi
+*.glg
+*.gls
+*.ilg
+*.ind
+*.lof
+*.lot
+*.lox
+*.maf
+*.mtc
+*.mtc1
+*.out
+*.synctex.gz
+*.orig
+
+*.pdf
+
+####### Exceptions ########
+!/**/Material/*.pdf
+!/**/Material/**/*.pdf
+!/**/Slides/*.pdf
+!/**/Noter/*.pdf
+#!/**/Notes/*.pdf
+!/**/Documentation/*.pdf
+!**/Bilag/*.pdf #An exception
+
+####### Temporary folders ####### 
+[Bb]in
+[Dd]ebug*/
+[Rr]elease*/
+ipch/
+*.[Oo]bj/
+
