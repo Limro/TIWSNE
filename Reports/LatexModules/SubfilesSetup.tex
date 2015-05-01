@@ -1,12 +1,24 @@
 %Seperated files
 %--------------------------------------------------
-%Opret filer således:
-%\documentclass[Navn-på-hovedfil]{subfiles}
-%\begin{document}
-% Indmad
-%\end{document}
-%
-% I hovedfil inkluderes således:
-% \subfile{navn-på-subfil}
-%--------------------------------------------------
 \usepackage{subfiles}
+
+% -------------------------------------------------
+% Example for a file
+% -------------------------------------------------
+% 
+% %!TEX root = Main.tex
+% \documentclass[Main]{subfiles}
+
+% \begin{document}
+
+% \section{\dots}
+
+% \end{document}
+% 
+% -------------------------------------------------
+% In the main file include the following:
+% -------------------------------------------------
+% ...
+% \subfile{navn-på-subfil}
+% ...
+% -------------------------------------------------

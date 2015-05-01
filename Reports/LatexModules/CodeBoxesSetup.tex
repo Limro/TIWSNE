@@ -1,17 +1,17 @@
-% Følgende er til koder.
+% For code boxes
 %----------------------------------------------------------
-%\begin{lstlisting}[caption=Overskrift på boks, style=Code-C++, label=lst:referenceLabel]
-%public void hello(){}
-%\end{lstlisting}
+% \begin{lstlisting}[caption=Title of box, style=Code-C++, label=lst:referenceLable]
+% public void hello(){}
+% \end{lstlisting}
 %----------------------------------------------------------
 
-%Exstra space
+% Exstra space
 \usepackage{xspace}
-%Navn på bokse efterfulgt af \xspace (hvis det skal være mellemrum
-%gives det med denne udvidelse. Ellers ingen mellemrum.
+% Navn på bokse efterfulgt af \xspace (hvis det skal være mellemrum
+% gives det med denne udvidelse. Ellers ingen mellemrum.
 \newcommand{\codeTitle}{Code snippet\xspace}
 
-%Pakker der skal bruges til lstlisting
+% Pakker der skal bruges til lstlisting
 \usepackage{listings}
 \usepackage{color}
 \usepackage{textcomp}
@@ -27,7 +27,7 @@
 	showstringspaces= false,
 	basicstyle		= \small,
 	numberstyle		= \footnotesize,
-%	numbers			= left, % Tal? Udkommenter hvis ikke
+%	numbers			= left, % wanter numbers? Remove comment if wanted
 	stepnumber		= 2,
 	numbersep		= 6pt,
 	tabsize			= 2,
@@ -46,12 +46,11 @@
 %	framexbottommargin	= 4pt,
 }
 
-%Bredde der bruges til indryk
-%Den skal være 6 pt mindre
+% Width for margin - must be 6 pt
 \usepackage{calc}
 
 
-% Forskellige styles for forskellige kodetyper
+% Different style for different languages
 \usepackage{caption}
 \DeclareCaptionFont{white}{\color{white}}
 \DeclareCaptionFormat{listing}%
@@ -68,6 +67,7 @@
 	font			= {bf,footnotesize}
 }
 
+% Add style (language) here
 \lstdefinestyle{Code-C} {language=C, style=Code}
 \lstdefinestyle{Code-Java} {language=Java, style=Code}
 \lstdefinestyle{Code-C++} {language=[Visual]C++, style=Code}
