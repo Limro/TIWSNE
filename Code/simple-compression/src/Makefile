@@ -1,0 +1,3 @@
+COMPONENT=SimpleCompressionApp
+include $(MAKERULES)
+
