@@ -1,6 +1,7 @@
 uint16_t zip(uint16_t[] data, uint8_t compressBits)
 {
-	uint16_t[] compressedData = {};
+	uint16_t[(sizeof(data)/8)*(8-compressBits)] compressedData = {};
+	uint8_t[(8-compressBits)] workedData = {};
 	uint8_t index;
 
 	for(index = 0 ; index < sizeof(data) ; index = index+8)
@@ -15,10 +16,10 @@ uint16_t zip(uint16_t[] data, uint8_t compressBits)
 		}
 
 		//Take x bytes, push them to function
-		uint8_t[7] workedData = SliceBits(tmpData, compressBits);
+		workedData = SliceBits(tmpData, compressBits);
 
 		//Store the workedData in the compressedData variable
-		for(i = 0; i<7 ; i++)
+		for(i = 0; i<(8-compressBits) ; i++)
 		{
 			compressedData[index] = workedData[i];
 		}
@@ -32,13 +33,13 @@ uint8_t[] SliceBits(uint8_t[] data, uint8_t compressBits)
 	uint8_t[sizeof(data)-1] workedData = {};
 	uint8_t tmp;
 	
-	workedData[0] = (( data[0] >> 1 ) << 1); // xxxx xxx0
-	workedData[0] |= (data[1] >> 7);		 // xxxx xxxy
+	workedData[0] = (( data[0] >> 1 ) << compressBits); // xxxx xxx0
+	workedData[0] |= (data[1] >> (8-compressBits));		 // xxxx xxxy
 	
-	for(i = 1; i < sizeof(data)-1; i++)
+	for(i = 1; i < sizeof(data)-compressBits; i++)
 	{
-		workedData[i] = (( data[i] >> i+1 ) << i+2);
-		workedData[i] |= (data[i+1] >> 7-i);
+		workedData[i] = (( data[i] >> i+(8-compressBits) ) << i+2);
+		workedData[i] |= (data[i+1] >> (8-compressBits)-i);
 	}
 	return workedData;
 }
