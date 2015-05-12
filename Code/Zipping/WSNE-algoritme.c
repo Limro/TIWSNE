@@ -14,8 +14,8 @@ uint16_t zip(uint16_t[] data, uint8_t compressBits)
 			tmpData[i] = data[index+i];
 		}
 
-		SliceBits(tmpData, compressBits);
 		//Take x bytes, push them to function
+		SliceBits(tmpData, compressBits);
 	}
 }
 
@@ -24,14 +24,6 @@ uint8_t[] SliceBits(uint8_t[] data, uint8_t compressBits)
 	uint8_t i;
 	uint8_t[sizeof(data)-1] workedData = {};
 	uint8_t tmp;
-
-	// workedData[0] = (data & 0b11111110);
-	// tmp = data[1] >> 7;
-	// workedData[0] |= (tmp & 0b00000001);
-
-	// workedData[1] = ((data[1] >> 2)<<3);
-	// tmp = data[2] >> 6;
-	// workedData[1] |= (tmp & 0b00000011);
 	
 	workedData[0] = (( data[0] >> 1 ) << 1); // xxxx xxx0
 	workedData[0] |= (data[1] >> 7);		 // xxxx xxxy
