@@ -18,7 +18,6 @@ module TestSerialC {
 	
 		interface Flash;
 	
-		interface Timer<TMilli> as MilliTimer;
 		interface Notify<button_state_t>;
 	}
 }
@@ -32,12 +31,9 @@ implementation {
 	uint16_t counter = 0;
 	int maxChunks = 1024;
  
-	char sendIndex = 0;
+	int sendIndex = 0;
 	char sendArray[64];
- 
-	char recArray[64];
-	char recIndex = 0;
- 
+  
 	event void Boot.booted() {
 		call Control.start();
 		call Notify.enable();
@@ -84,10 +80,6 @@ implementation {
 		}
 	}
  
-	event void MilliTimer.fired() {
-		//call MilliTimer.startOneShot(100);
-	}
- 
 	event message_t* ReceiveStatus.receive(message_t* bufPtr, 
 			void* payload, uint8_t len) 
 	{
@@ -122,6 +114,16 @@ implementation {
 			{
 	
 			}
+			else if(statusMsg->status == TRANSFER_FROM_TELOS)
+			{
+				//Start remote transfer (to PC)
+				sendIndex = 0;
+				call Flash.read(sendArray, sendIndex);	
+			}
+			else
+			{
+				// nothing
+			}
 			return bufPtr;
 		}
 	}
@@ -142,8 +144,7 @@ implementation {
 	
 			call Flash.write(data->chunk, data->chunkNum);
 			sendIndex++;
-	
-	
+				
 			return bufPtr;
 		}
 	}
@@ -178,6 +179,7 @@ implementation {
 	event void Flash.readDone(error_t result)
 	{
 		sendChunkMessage(sendArray);
+		call Leds.led1Toggle();
 	}
 
 	event void Flash.eraseDone(error_t result)

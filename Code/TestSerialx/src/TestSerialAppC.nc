@@ -68,13 +68,11 @@ implementation {
 	App.ReceiveStatus -> AM.Receive[AM_STATUS_MSG_T];
 	App.SendStatus -> AM.AMSend[AM_STATUS_MSG_T];
 	App.Leds -> LedsC;
-	App.MilliTimer -> TimerMilliC;
 	App.PacketAck -> AM.PacketAcknowledgements;
 	
 	App.Packet -> AM;
 	
 	App.Leds -> LedsC;
-	App.MilliTimer -> TimerMilliC;
  
 	App.Flash -> FlashC;
 	FlashC.BlockRead -> BlockStorageC.BlockRead;

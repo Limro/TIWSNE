@@ -56,14 +56,14 @@ public class TestSerial implements MessageListener {
 	public static MoteIF moteIF;
 
 	public static int currentChunk;
-	
+
 	public static int isReady = 0;
 	public static short[][] data = new short[1024][64];
-	
+
 	public static statusMsg status = new statusMsg();
 	public static chunkMsg payload = new chunkMsg();
-	
-	
+
+
 	public TestSerial(MoteIF moteIF) {
 		this.moteIF = moteIF;
 		this.moteIF.registerListener(new chunkMsg(), this);
@@ -71,29 +71,83 @@ public class TestSerial implements MessageListener {
 	}
 
 	public void messageReceived(int to, Message message) {
-		statusMsg msg = (statusMsg)message;
-		if ((msg.get_status() == TRANSFER_OK) ||(msg.get_status() == TRANSFER_READY))
+		if(message.amType() == chunkMsg.AM_TYPE)
 		{
-			System.out.println("Got OK");
-			if(currentChunk < 1024){
-			System.out.println("Sending packet " + currentChunk);
-			payload.set_chunk(data[currentChunk]);
-			payload.set_chunkNum(currentChunk);
-			currentChunk++;
-			try{
-				moteIF.send(0, payload);
-			}
-			catch (IOException exception)
+			chunkMsg msg = (chunkMsg)message;
+			short[] buf = msg.get_chunk();
+			currentChunk = msg.get_chunkNum();
+			data[currentChunk] = buf;
+			System.out.println("Received chunk:" + currentChunk);
+			//currentChunk++;
+		}
+		else if(message.amType() == statusMsg.AM_TYPE)
+		{
+			statusMsg msg = (statusMsg)message;
+			if ((msg.get_status() == TRANSFER_OK) ||(msg.get_status() == TRANSFER_READY))
 			{
-				System.err.println("Exception throw when sending data:");
-				System.err.println(exception);
+				System.out.println("Got OK");
+				if(currentChunk < 1024){
+					System.out.println("Sending packet " + currentChunk);
+					payload.set_chunk(data[currentChunk]);
+					payload.set_chunkNum(currentChunk);
+					currentChunk++;
+					try{
+						moteIF.send(0, payload);
+					}
+					catch (IOException exception)
+					{
+						System.err.println("Exception throw when sending data:");
+						System.err.println(exception);
+					}
+				}
+				else
+				{
+					currentChunk = 0;
+					System.out.println("Done sending data");
+					try {Thread.sleep(1000);}
+					catch (InterruptedException exception) {}
+					status.set_status(TRANSFER_FROM_TELOS);
+					try{
+						moteIF.send(0, status);
+						System.out.println("Requesting Data");
+					}
+					catch (IOException exception){}
+				}
+
 			}
-			}
-			else
+			else if (msg.get_status() == TRANSFER_DONE)
 			{
-				System.out.println("Done sending data");
+				System.out.println("Transfer is done. Reconstructing...");
+				// reconstruct image
+				File file = new File("image.bin");
+				byte[] fileData = new byte[(int) file.length()];
+				int cnt1 = 0;
+				int cnt2 = 0;
+				int cnt3 = 0;
+
+				for (cnt1 = 0; cnt1 < 1024; cnt1++)
+				{
+					for(cnt2 = 0; cnt2 < 64; cnt2++)
+					{
+						fileData[cnt3] = (byte)data[cnt1][cnt2];
+						cnt3++;
+					}
+				}
+				try{
+					FileOutputStream out = new FileOutputStream("reimage.bin");
+					try{
+						out.write(fileData);
+						out.close();
+					}
+					catch(IOException exception){}
+				}
+				catch(FileNotFoundException exception){}
+
 			}
-			
+		}
+		else
+		{
+			System.out.println("unknown message");
 		}
 	}
 
@@ -113,17 +167,17 @@ public class TestSerial implements MessageListener {
 		MoteIF mif = new MoteIF(phoenix);
 		TestSerial serial = new TestSerial(mif);
 		currentChunk = 0;
-		
+
 		File file = new File("image.bin");
 		byte[] fileData = new byte[(int) file.length()];
-		//DataInputStream dis = new DataInputStream(new FileInputStream(file));
-		//dis.readFully();
+		DataInputStream dis = new DataInputStream(new FileInputStream(file));
+		dis.readFully(fileData);
 		int totalChunks =  1024; // 256 * 256 / 64
 		//short[][] data = new short[totalChunks][64]; 
 		int cnt1 = 0;
 		int cnt2 = 0;
 		int cnt3 = 0;
-		
+
 		for (cnt1 = 0; cnt1 < totalChunks; cnt1++)
 		{
 			for(cnt2 = 0; cnt2 < 64; cnt2++)
@@ -132,33 +186,33 @@ public class TestSerial implements MessageListener {
 				cnt3++;
 			}
 		}
-		
+
 		status.set_status(TRANSFER_TO_TELOS);
-				
+
 		moteIF.send(0, status);
 
-//		int counter = 0;
-//		try {
-//			while ( (counter < 64)) {
-//				while(isReady == 0);
-//				System.out.println("Sending packet " + counter);
-//				payload.set_chunk(data[counter]);
-//				payload.set_chunkNum(counter);
-//				serial.moteIF.send(0, payload);
-//				counter++;
-//				isReady = 0;
-//				try {Thread.sleep(250);}
-//				catch (InterruptedException exception) {}
-//				
-//			}
-//		}
-//		catch (IOException exception) {
-//			System.err.println("Exception thrown when sending packets. Exiting.");
-//			System.err.println(exception);
-//		}
+		//		int counter = 0;
+		//		try {
+		//			while ( (counter < 64)) {
+		//				while(isReady == 0);
+		//				System.out.println("Sending packet " + counter);
+		//				payload.set_chunk(data[counter]);
+		//				payload.set_chunkNum(counter);
+		//				serial.moteIF.send(0, payload);
+		//				counter++;
+		//				isReady = 0;
+		//				try {Thread.sleep(250);}
+		//				catch (InterruptedException exception) {}
+		//				
+		//			}
+		//		}
+		//		catch (IOException exception) {
+		//			System.err.println("Exception thrown when sending packets. Exiting.");
+		//			System.err.println(exception);
+		//		}
 
 
-		
+
 		//serial.sendPackets();
 	}
 
