@@ -3,7 +3,7 @@
 
 #define LENGTH 65536
 
-module SimpleCompression
+module FourBitCompression
 {
 	uses interface Boot;
 }
