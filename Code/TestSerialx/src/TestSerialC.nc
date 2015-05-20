@@ -6,7 +6,6 @@
 module TestSerialC {
 	uses {
 		interface SplitControl as Control;
-		interface Leds;
 		interface Boot;
 	
 		interface Receive as ReceiveData;
@@ -17,8 +16,6 @@ module TestSerialC {
 		interface PacketAcknowledgements as PacketAck;
 	
 		interface Flash;
-	
-		interface Notify<button_state_t>;
 	}
 }
 implementation {
@@ -27,7 +24,6 @@ implementation {
 	message_t chunk_pkt;
 	message_t status_pkt;
 
-	bool locked = FALSE;
 	uint16_t counter = 0;
 	int maxChunks = 1024;
  
@@ -36,7 +32,6 @@ implementation {
   
 	event void Boot.booted() {
 		call Control.start();
-		call Notify.enable();
 	}
 	
 	void sendStatusMessage( uint8_t status )
@@ -68,18 +63,6 @@ implementation {
 		}
 	}
 	
-	event void Notify.notify( button_state_t state) 
-	{
-		if (state == BUTTON_PRESSED )
-		{
-			// TODO
-		}
-		else if (state == BUTTON_RELEASED )
-		{
-			// TODO
-		}
-	}
- 
 	event message_t* ReceiveStatus.receive(message_t* bufPtr, 
 			void* payload, uint8_t len) 
 	{
@@ -173,13 +156,11 @@ implementation {
 
 	event void Flash.writeDone(error_t result){
 			sendStatusMessage(TRANSFER_OK);
-			call Leds.led0Toggle();
 	}
 
 	event void Flash.readDone(error_t result)
 	{
 		sendChunkMessage(sendArray);
-		call Leds.led1Toggle();
 	}
 
 	event void Flash.eraseDone(error_t result)
