@@ -2,7 +2,8 @@
 
 configuration SimpleCompressionApp {}
 implementation {
-  components MainC, OneBitCompression;
+  components MainC, OneBitCompression, FourBitCompression;
 
   MainC.Boot <- OneBitCompression;
+//	MainC.Boot <- FourBitCompression;
 }

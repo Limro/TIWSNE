@@ -1,114 +1,58 @@
 #include "printf.h"
+#define LENGTH2 16
 
 module OneBitCompression
 {
   uses interface Boot;
 }
 implementation
-{
-	void SliceBits(unsigned char* data, unsigned char* output) 
-	{
-		uint8_t i;
-		unsigned char tmp[8];
-
-		//Remove unwanted bits
-		//xxxx xxxx -> xxxx xxx0
-		for(i = 0; i < 8; i++)
-		{
-			tmp[i] = data[i] & 0xFE;
-		}
+{		
+	void compress(unsigned char* src, unsigned char* dest) {
+		uint16_t i, j;
 		
-		//Insert missing bits
-		for(i = 0; i < 6; i++) 
-		{
-			output[i] = (tmp[i] << i) + (tmp[i+1] >> 7);
+		for (i = 0; i < LENGTH2; i += 8) {
+	
+			for (j = i; j < i+7; j++)
+				dest[j-i/8] = src[j] | ((src[i+7] >> (7-i-j)) & 1);
 		}
-
-		output[6] = (tmp[6] << 6) | (tmp[7] >> 1);
 	}
 	
-	void AddBits(unsigned char* data, unsigned char* output)
-	{
-		uint8_t i;
-		uint8_t tmp;
+	void decompress(unsigned char* src, unsigned char* dest) {
+		uint16_t i, j;
 		
-		//xxxx xxxy -> xxxx xxx0
-		output[0] = (data[0] >> 1) << 1;
-		
-		for(i = 1; i < 7; i++)
-		{
-			tmp = data[i-1] << (8-i);
-			output[i] = tmp | ((data[i] >> (i+1)) << 1);
-		}
-
-		output[7] = data[6] << 1;
-	}
+		for (i = 0; i < LENGTH2; i += 8) {
+			dest[i+7] = 0;
 	
-	void compress(unsigned char* src, unsigned char* dest) 
-	{
-		uint16_t destLength = 896;
-		uint8_t inputLength = 8;
-		uint8_t outputLength = 7;
-
-		uint16_t index;
-		for(index = 0; index < 1024; index += inputLength) 
-		{
-			uint8_t i;
-			uint8_t input[inputLength];
-			uint8_t output[outputLength];
-
-			for(i = 0; i < inputLength; i++) 
-				input[i] = src[index + i];
-
-			SliceBits(input, output);
-
-			for(i = 0; i < outputLength; i++) 
-				dest[index - index/inputLength + i] = output[i];
-		}
-	}
-
-	void decompress(unsigned char* src, unsigned char* dest) 
-	{
-		uint16_t srcLength = 896;
-		uint8_t inputLength = 7;
-		uint8_t outputLength = 8;
-
-		uint16_t index;
-		for(index = 0; index < srcLength; index += inputLength) 
-		{
-			uint8_t i;
-			unsigned char input[inputLength];
-			unsigned char output[outputLength];
-
-			for(i = 0; i < inputLength; i++) 
-				input[i] = src[index + i];
-
-			AddBits(input, output);
-
-			for(i = 0; i < outputLength; i++) 
-				dest[index + index/inputLength + i] = output[i];
+			for (j = i; j < i+7; j++) {
+				dest[j] = src[j] & 0xFE;
+				dest[i+7] += (src[j] << (7-i-j)) & (128 >> (7-i-j));
+			}
 		}
 	}
 		
 	event void Boot.booted() {
-		unsigned char data[8] = {2,2,2,2,2,2,2,2}; 
-		unsigned char data2[8] = {2,4,8,16,32,64,129};
-		unsigned char output[7];
-		unsigned char output2[8];
+		unsigned char compressed[14];
+		unsigned char decompressed[LENGTH2];
 		uint8_t i;
-		
-		SliceBits(data, output);
-		
-		for(i = 0; i < 7; i++)
-			printf("\n1 bit: %u", output[i]);
 
+		for(i = 0 ; i < LENGTH2; i++)
+			decompressed[i] = 2;
+		
+		compress(decompressed, compressed);
+		
+		for(i = 0; i < LENGTH2; i++)
+		{
+			printf("\n%i:%u", i, compressed[i]);	
+		}
 		printfflush();
 		
-		AddBits(output, output2);
+		decompress(compressed, decompressed);
 
-		for(i = 0; i < 8; i++)
-			printf("\nAdded bit: %u", output2[i]);
-
-		printfflush();
+//		for(i = 6; i < LENGTH2; i++)
+//		{
+//			printf("\n%i:%u", i, decompressed[i]);	
+//		}
+//		printf("\n");
+//		printfflush();
 	}
 }
