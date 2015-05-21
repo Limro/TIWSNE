@@ -2,7 +2,7 @@
 
 #define BLOCK_LENGTH 1024
 
-module OneBitCompression
+module TwoBitCompression
 {
 	uses interface Boot;
 }
@@ -11,31 +11,31 @@ implementation
 	void compress(unsigned char* src, unsigned char* dest) {
 		uint16_t i, j;
 		
-		for (i = 0; i < BLOCK_LENGTH/8; i++) {
-		    uint16_t si = i*8, di = i*7;
+		for (i = 0; i < BLOCK_LENGTH/4; i++) {
+		    uint16_t si = i*4, di = i*3;
 		    
-			for (j = 0; j < 7; j++)
-			    dest[di+j] = (src[si+j] & 0xFE) | ((src[si+7] >> (7-j)) & 1);
+			for (j = 0; j < 3; j++)
+			    dest[di+j] = (src[si+j] & 0xFC) | ((src[si+3] >> (6-j*2)) & 3);
 		}
 	}
 
 	void decompress(unsigned char* src, unsigned char* dest) {
 		uint16_t i, j;
 		
-		for (i = 0; i < BLOCK_LENGTH/8; i++) {
-		    uint16_t si = i*7, di = i*8;
+		for (i = 0; i < BLOCK_LENGTH/4; i++) {
+		    uint16_t si = i*3, di = i*4;
 
-			dest[di+7] = 0;
+			dest[di+3] = 0;
 
-			for (j = 0; j < 7; j++) {
-				dest[di+j] = src[si+j] & 0xFE;
-				dest[di+7] += (src[si+j] << (7-j)) & (128 >> j);
+			for (j = 0; j < 3; j++) {
+				dest[di+j] = src[si+j] & 0xFC;
+				dest[di+3] += (src[si+j] << (6-j*2)) & (192 >> j*2);
 			}
 		}
 	}
 
 	event void Boot.booted() {
-		unsigned char compressed[BLOCK_LENGTH*7/8];
+		unsigned char compressed[BLOCK_LENGTH*3/4];
 		unsigned char decompressed[BLOCK_LENGTH];
 		uint16_t i;
 
