@@ -1,6 +1,6 @@
 #include "printf.h"
 
-#define PACKETLENGTH 1024
+#define BLOCK_LENGTH 1024
 
 module OneBitCompression
 {
@@ -11,7 +11,7 @@ implementation
 	void compress(unsigned char* src, unsigned char* dest) {
 		uint16_t i, j;
 		
-		for (i = 0; i < PACKETLENGTH/8; i++) {
+		for (i = 0; i < BLOCK_LENGTH/8; i++) {
 		    uint16_t si = i*8, di = i*7;
 		    
 			for (j = 0; j < 7; j++)
@@ -22,7 +22,7 @@ implementation
 	void decompress(unsigned char* src, unsigned char* dest) {
 		uint16_t i, j;
 		
-		for (i = 0; i < PACKETLENGTH/8; i++) {
+		for (i = 0; i < BLOCK_LENGTH/8; i++) {
 		    uint16_t si = i*7, di = i*8;
 
 			dest[di+7] = 0;
@@ -33,19 +33,19 @@ implementation
 			}
 		}
 	}
-		
-	event void Boot.booted() {
-		unsigned char compressed[PACKETLENGTH*7/8];
-		unsigned char decompressed[PACKETLENGTH];
-		uint8_t i;
 
-		for(i = 0; i < PACKETLENGTH; i++)
+	event void Boot.booted() {
+		unsigned char compressed[BLOCK_LENGTH*7/8];
+		unsigned char decompressed[BLOCK_LENGTH];
+		uint16_t i;
+
+		for(i = 0; i < BLOCK_LENGTH; i++)
 			decompressed[i] = i;
 		
 		compress(decompressed, compressed);
 		decompress(compressed, decompressed);
 
-		for(i = 0; i < PACKETLENGTH; i++)
+		for(i = 0; i < BLOCK_LENGTH; i++)
 			printf("\n%i:%u", i, compressed[i]);	
 
 		printfflush();
