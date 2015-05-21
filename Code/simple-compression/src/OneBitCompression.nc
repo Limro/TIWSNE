@@ -9,10 +9,10 @@ module OneBitCompression
 implementation
 {		
 	void compress(unsigned char* src, unsigned char* dest) {
-		int i, j;
+		uint16_t i, j;
 		
 		for (i = 0; i < PACKETLENGTH/8; i++) {
-		    int si = i*8, di = i*7;
+		    uint16_t si = i*8, di = i*7;
 		    
 			for (j = 0; j < 7; j++)
 			    dest[di+j] = (src[si+j] & 0xFE) | ((src[si+7] >> (7-j)) & 1);
@@ -20,10 +20,10 @@ implementation
 	}
 
 	void decompress(unsigned char* src, unsigned char* dest) {
-		int i, j;
+		uint16_t i, j;
 		
 		for (i = 0; i < PACKETLENGTH/8; i++) {
-		    int si = i*7, di = i*8;
+		    uint16_t si = i*7, di = i*8;
 
 			dest[di+7] = 0;
 
