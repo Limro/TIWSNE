@@ -1,7 +1,9 @@
+#include "printf.h"
 
 configuration SimpleCompressionApp {}
 implementation {
-  components MainC, SimpleCompression;
+  components MainC, OneBitCompression, FourBitCompression;
 
-  MainC.Boot <- SimpleCompression;
+  MainC.Boot <- OneBitCompression;
+//	MainC.Boot <- FourBitCompression;
 }
