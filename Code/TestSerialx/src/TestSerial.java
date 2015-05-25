@@ -103,15 +103,21 @@ public class TestSerial implements MessageListener {
 				else
 				{
 					currentChunk = 0;
-					System.out.println("Done sending data");
-					try {Thread.sleep(1000);}
-					catch (InterruptedException exception) {}
-					status.set_status(TRANSFER_FROM_TELOS);
+					status.set_status(TRANSFER_DONE);
 					try{
-						moteIF.send(0, status);
-						System.out.println("Requesting Data");
+					moteIF.send(0,status);
+					System.out.println("Done sending data");
 					}
 					catch (IOException exception){}
+					System.exit(0);
+					//try {Thread.sleep(1000);}
+					//catch (InterruptedException exception) {}
+					//status.set_status(TRANSFER_FROM_TELOS);
+					//
+					//	moteIF.send(0, status);
+					//	System.out.println("Requesting Data");
+					//}
+					//catch (IOException exception){}
 				}
 
 			}
@@ -120,7 +126,7 @@ public class TestSerial implements MessageListener {
 				System.out.println("Transfer is done. Reconstructing...");
 				// reconstruct image
 				File file = new File("image.bin");
-				byte[] fileData = new byte[(int) file.length()];
+				byte[] recData = new byte[(int) file.length()];
 				int cnt1 = 0;
 				int cnt2 = 0;
 				int cnt3 = 0;
@@ -129,15 +135,17 @@ public class TestSerial implements MessageListener {
 				{
 					for(cnt2 = 0; cnt2 < 64; cnt2++)
 					{
-						fileData[cnt3] = (byte)data[cnt1][cnt2];
+						recData[cnt3] = (byte)data[cnt1][cnt2];
 						cnt3++;
 					}
 				}
 				try{
-					FileOutputStream out = new FileOutputStream("reimage.bin");
+					FileOutputStream out = new FileOutputStream("/mnt/hgfs/TinyOSShared/reimage.bin");
 					try{
-						out.write(fileData);
+						out.write(recData);
 						out.close();
+						System.out.println("Image reconstruction completed");
+						System.exit(0);
 					}
 					catch(IOException exception){}
 				}
@@ -186,35 +194,17 @@ public class TestSerial implements MessageListener {
 				cnt3++;
 			}
 		}
-
-		status.set_status(TRANSFER_TO_TELOS);
-
+		
+		if(args[0].equals("r"))
+    	{
+			System.out.println("Requesting Data");
+			status.set_status(TRANSFER_FROM_TELOS);
+    	}
+		else
+		{
+			System.out.println("Sending Data");
+			status.set_status(TRANSFER_TO_TELOS);
+		}
 		moteIF.send(0, status);
-
-		//		int counter = 0;
-		//		try {
-		//			while ( (counter < 64)) {
-		//				while(isReady == 0);
-		//				System.out.println("Sending packet " + counter);
-		//				payload.set_chunk(data[counter]);
-		//				payload.set_chunkNum(counter);
-		//				serial.moteIF.send(0, payload);
-		//				counter++;
-		//				isReady = 0;
-		//				try {Thread.sleep(250);}
-		//				catch (InterruptedException exception) {}
-		//				
-		//			}
-		//		}
-		//		catch (IOException exception) {
-		//			System.err.println("Exception thrown when sending packets. Exiting.");
-		//			System.err.println(exception);
-		//		}
-
-
-
-		//serial.sendPackets();
 	}
-
-
 }
