@@ -4,11 +4,21 @@
 The idea of simple compressing bits, is to take two byte, e.g. \texttt{xxxx yyyy} and \texttt{zzzz vvvv}, and compress them to \texttt{xxxx zzzz}.
 This way the four least significant bits have been compressed away, and the input has been reduced from 2 bytes to one byte.
 
-\subsection{One bit compression} % (fold)
+\subsection{One Bit Compression} % (fold)
 \label{sub:one_bit_compression}
 \FloatBarrier
 
-\begin{figure}
+The One Bit Compression is a lossy compression (meaning, that information is actually dropped in the process).
+The amount of information lost, however, is a single bit pr. byte.
+This means, that a $256 \cdot 256$ pixel, 8 bit picture will be reduced $\dfrac{7}{8}$ of information:
+\begin{align}
+256 px \cdot 256 px \cdot \dfrac{\text{7 bytes}}{\text{8 bytes}} &= \text{57,344 bytes} & \text{1 bit compression} \\
+256 px \cdot 256 px &= \text{65536 bytes} & \text{no compression}
+\end{align}
+
+
+
+\begin{figure}[htbp]
 	\centering
 	\begin{subfigure}[t]{0.3\textwidth}\tightdisplaymath
 		\centerline{
@@ -22,7 +32,7 @@ This way the four least significant bits have been compressed away, and the inpu
 			g	& g	& g	& g	& g	& g	& g	& g	\\
 			h	& h	& h	& h	& h	& h	& h	& h	}}
 		\caption{8 uncompressed bytes.}
-		\label{fig:gull}
+		\label{fig:1BitCompressed}
 	\end{subfigure}
 	\begin{subfigure}[t]{0.3\textwidth}\tightdisplaymath
 		\centerline{
@@ -34,9 +44,9 @@ This way the four least significant bits have been compressed away, and the inpu
 			e	& e	& e	& e	& e	& e	& e	& 0 \\
 			f	& f	& f	& f	& f	& f	& f	& 0	\\
 			g	& g	& g	& g	& g	& g	& g	& 0	\\
-			h \ar[uuuuuuurrrrrrr]	& h\ar[uuuuuurrrrrr]	& h	\ar[uuuuurrrrr]& h \ar[uuuurrrr] & h \ar[uuurrr] & h \ar[uurr] & h \ar[ur] & h	}}
+			h \ar[uuuuuuurrrrrrr]	& h\ar[uuuuuurrrrrr]	& h	\ar[uuuuurrrrr]& h \ar[uuuurrrr] & h \ar[uuurrr] & h \ar[uurr] & h \ar[ur] & 0 }}
 	        \caption{Replace last bit with the 8th byte's bit.}
-	        \label{fig:tiger}
+	        \label{fig:1bitCom}
 	\end{subfigure}
 	\begin{subfigure}[t]{0.3\textwidth}\tightdisplaymath
 		\centerline{
@@ -49,23 +59,90 @@ This way the four least significant bits have been compressed away, and the inpu
 			f	& f	& f	& f	& f	& f	& f	& h	\\
 			g	& g	& g	& g	& g	& g	& g	& h	}}
 		\caption{7 compressed bytes.}
-		\label{fig:gull}
+		\label{fig:1BitUncompressed}
 	\end{subfigure}%
 \end{figure}
 
 
-% \xymatrix@=2pt{
-% a	& a	& a	& a	& a	& a	& a	& 0	\\
-% b	& b	& b	& b	& b	& b	& b	& 0 \\
-% c	& c	& c	& c	& c	& c	& c	& 0 \\
-% d	& d	& d	& d	& d	& d	& d	& 0 \\
-% e	& e	& e	& e	& e	& e	& e	& 0 \\
-% f	& f	& f	& f	& f	& f	& f	& 0	\\
-% g	& g	& g	& g	& g	& g	& g	& 0	\\
-% h	& h	& h	& h	& h	& h	& h	& h	}
+
+\subsection{Two bit compression} % (fold)
+\label{sub:two_bit_compression}
+\FloatBarrier
+
+
+
+\begin{figure}[htbp]
+	\centering
+	\begin{subfigure}[t]{0.3\textwidth}\tightdisplaymath
+		\centerline{
+		\xymatrix@ = 2pt{
+			a	& a	& a	& a	& a	& a	& a	& a	\\
+			b	& b	& b	& b	& b	& b	& b	& b \\
+			c	& c	& c	& c	& c	& c	& c	& c \\
+			d	& d	& d	& d	& d	& d	& d	& d }}
+		
+		\caption{4 uncompressed bytes.}
+		\label{fig:2BitCompressed}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.3\textwidth}\tightdisplaymath
+		\centerline{
+		\xymatrix@=1pt{
+			a	& a	& a	& a	& a	& a	& 0	& 0	\\
+			b	& b	& b	& b	& b	& b	& 0	& 0 \\
+			c	& c	& c	& c	& c	& c	& 0	& 0 \\
+			d \ar[uuurrrrrr]	& d\ar[uuurrrrrr]	& d\ar[uurrrr]	& d\ar[uurrrr]	& d\ar[urr]	& d\ar[urr]	& 0	& 0 }}
+		
+		\caption{Replace last two bits with the 4th byte's bits.}
+		\label{fig:2bitCom}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.3\textwidth}\tightdisplaymath
+		\centerline{
+		\xymatrix@ = 1pt{
+			a	& a	& a	& a	& a	& a	& d	& d	\\
+			b	& b	& b	& b	& b	& b	& d	& d \\
+			c	& c	& c	& c	& c	& c	& d	& d }}
+		\caption{3 compressed bytes.}
+		\label{fig:2BitUncompressed}
+	\end{subfigure}%
+\end{figure}
 
 
 
 
+\subsection{Four bit compression} % (fold)
+\label{sub:four_bit_compression}
+\FloatBarrier
 
-% subsection one_bit_compression (end)
+
+
+\begin{figure}[htbp]
+	\centering
+	\begin{subfigure}[t]{0.3\textwidth}\tightdisplaymath
+		\centerline{
+		\xymatrix@ = 2pt{
+			a	& a	& a	& a	& a	& a	& a	& a	\\
+			b	& b	& b	& b	& b	& b	& b	& b }}
+		
+		\caption{2 uncompressed bytes.}
+		\label{fig:4BitCompressed}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.3\textwidth}\tightdisplaymath
+		\centerline{
+		\xymatrix@=1pt{
+			a	& a	& a	& a	& 0	& 0	& 0	& 0	\\
+			b \ar[urrrr] & b\ar[urrrr] & b\ar[urrrr] & b \ar[urrrr] & 0	& 0	& 0	& 0 }}
+		
+		\caption{Replace last four bits with the 2nd byte's bits.}
+		\label{fig:4bitCom}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.3\textwidth}\tightdisplaymath
+		\centerline{
+		\xymatrix@ = 1pt{
+			a	& a	& a	& a	& b	& b	& b	& b	}}
+		\caption{1 compressed byte.}
+		\label{fig:4BitUncompressed}
+	\end{subfigure}%
+\end{figure}
+
+
+
