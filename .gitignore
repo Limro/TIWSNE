@@ -111,6 +111,7 @@ local.properties
 #!/**/Notes/*.pdf
 !/**/Documentation/*.pdf
 !**/Bilag/*.pdf #An exception
+!/**/Figures/*.pdf
 
 ####### Temporary folders ####### 
 [Bb]in
