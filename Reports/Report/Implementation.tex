@@ -6,7 +6,10 @@ The following chapter seeks to explain the implementation of the mini project.\\
 Image and explaination of the overall system and blocks\\
 
 \subsection{Serial communication}
-The serial communication is responsible for the transfer of the image to and from the Telos B. A header file is available to both the PC software and the Telos B program. It contains a series of defines that are used for the communication messages. The defines can be found in table \ref{definetable}.
+The serial communication is responsible for the transfer of the image to and from the TelosB. 
+A header file is available to both the PC software and the TelosB program. 
+It contains a series of defines that are used for the communication messages. 
+The defines can be found in table \ref{definetable}.
 \begin{table}[H]
     \begin{tabular}{|l|l|l|}
     \hline
@@ -21,22 +24,27 @@ The serial communication is responsible for the transfer of the image to and fro
     \caption{Defines for serial communication.}
     \label{definetable}
 \end{table}
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\textwidth]{PCtoTelosb}
-	\caption{Transfer to telos sequence diagramme.}
+	\caption{Transfer to TelosB sequence diagram.}
 	\label{transfertotelos}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\textwidth]{PCfromTelosb}
-	\caption{Transfer from telos sequence diagramme.}
+	\caption{Transfer from TelosB sequence diagram.}
 	\label{transferfromtelos}
 \end{figure}
 
+
+
 \subsection{Radio Block}
 
-\subsection{Compression block}
 
+
+
+\subsection{Compression block}
 

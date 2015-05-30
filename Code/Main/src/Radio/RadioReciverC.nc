@@ -4,7 +4,7 @@ module RadioReciverC{
 	provides interface RadioTransfereReciverI; 
 	uses interface Receive;
 	uses interface SplitControl as AMControl;
-    uses interface Packet;
+		uses interface Packet;
 }
 implementation{
 	bool reciving = FALSE;
@@ -57,44 +57,39 @@ implementation{
 	}
 
 	event message_t * Receive.receive(message_t *msg, void *payload, uint8_t len){
-		if (len != sizeof(radio_packet_msg_t) || reciving == FALSE) {return msg;}
-    	else 
-    	{
-      		radio_packet_msg_t* rcm = (radio_packet_msg_t*)payload;
-      		
-      		
-      		if(buffer == NULL && rcm->ID == 1)
-      		{
-      			buffer = signal RadioTransfereReciverI.GetBuffer(rcm->TotalSize);
-      		}
-      		
-      		if(buffer != NULL)
-      		{      		
-      			if(lastID+1 == rcm->ID)
-      			{
-      				lastID++; 
-      				memcpy(rcm->Data,&buffer[rcm->ID*PAYLOADSIZE], rcm->len);
-      				Rxlen += rcm->len;
-      				
-      				if(Rxlen == rcm->TotalSize)
-      				{
-      					ReciveDone(SUCCESS);
-      				}
-      				
-      			}
-      			else
-      			{
-      				ReciveDone(FAIL);
-      			}
-      			
-      		}
-      		
-      		
-      
-    	}
-    	return msg;
+		if (len != sizeof(radio_packet_msg_t) || reciving == FALSE) 
+		{
+			return msg;
+		}
+		
+		else 
+		{
+			radio_packet_msg_t* rcm = (radio_packet_msg_t*)payload;
+			
+			if(buffer == NULL && rcm->ID == 1)
+			{
+				buffer = signal RadioTransfereReciverI.GetBuffer(rcm->TotalSize);
+			}
+			
+			if(buffer != NULL)
+			{					
+				if(lastID+1 == rcm->ID)
+				{
+					lastID++; 
+					memcpy(rcm->Data,&buffer[rcm->ID*PAYLOADSIZE], rcm->len);
+					Rxlen += rcm->len;
+					
+					if(Rxlen == rcm->TotalSize)
+					{
+						ReciveDone(SUCCESS);
+					}	
+				}
+				else
+				{
+					ReciveDone(FAIL);
+				}
+			}
+		}
+		return msg;
 	}
-	
-	
-	
 }

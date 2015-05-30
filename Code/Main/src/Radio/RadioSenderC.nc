@@ -5,7 +5,7 @@ module RadioSenderC{
 	provides interface RadioTransfereSenderI; 
 	uses interface AMSend;
 	uses interface SplitControl as AMControl;
-    uses interface Packet;
+		uses interface Packet;
 }
 implementation{
 	bool isSending = FALSE; 
@@ -18,16 +18,14 @@ implementation{
 	uint16_t dataPtrLength;
 	
 
-	void CreatePacketsCount(uint16_t length)
-	{
+	void CreatePacketsCount(uint16_t length){
 		TotalCount = (length/PAYLOADSIZE) + (length%PAYLOADSIZE != 0 ? 1 : 0); 
 		CurrentPacketCount = 0; 
 	}
 	
 	
 	
-	void CreatePacketsPacket(uint8_t *ptr,uint16_t length, uint16_t id)
-	{
+	void CreatePacketsPacket(uint8_t *ptr,uint16_t length, uint16_t id){
 		radio_packet_msg_t* payload = (radio_packet_msg_t*)call Packet.getPayload(&packet, sizeof(radio_packet_msg_t));
 		payload->ID = id; 
 		payload->TotalSize = length;
@@ -47,26 +45,25 @@ implementation{
 		CreatePacketsPacket(dataPtr,dataPtrLength, id);
 		
 		
-		if (call AMSend.send(AM_BROADCAST_ADDR, &packet, sizeof(radio_packet_msg_t)) != SUCCESS) 
-		{
+		if (call AMSend.send(AM_BROADCAST_ADDR, &packet, sizeof(radio_packet_msg_t)) != SUCCESS){
 			return FALSE; 
-        }
-        
-        return TRUE; 
+		}
+				
+		return TRUE; 
 	}
 	
 	
 	command error_t RadioTransfereSenderI.Send(uint8_t *ptr, uint16_t length){
 		if(isSending == FALSE)
 		{
-			
 			dataPtr = ptr;
 			dataPtrLength = length;
 			CreatePacketsCount(length);
-			if(call AMControl.start() != SUCCESS)
-			{
+			
+			if(call AMControl.start() != SUCCESS){
 				return FAIL; 
 			}
+
 			isSending = TRUE;
 								
 			return SUCCESS;	
@@ -75,13 +72,12 @@ implementation{
 	}
 
 	event void AMSend.sendDone(message_t *msg, error_t error){
-		
 		if (&packet == msg) {
 			if(SendNextPacket() == FALSE)
 			{
 				call AMControl.stop();
 			}
-    	}
+		}
 	}
 
 	event void AMControl.startDone(error_t error){
