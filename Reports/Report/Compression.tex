@@ -4,18 +4,21 @@
 The idea of simple compressing bits, is to take two byte, e.g. \texttt{xxxx yyyy} and \texttt{zzzz vvvv}, and compress them to \texttt{xxxx zzzz}.
 This way the four least significant bits have been compressed away, and the input has been reduced from 2 bytes to one byte.
 
+The simple bit compression is a lossy compression (meaning, that information is actually dropped in the process).
+
+
 \subsection{One Bit Compression} % (fold)
 \label{sub:one_bit_compression}
 \FloatBarrier
 
-The One Bit Compression is a lossy compression (meaning, that information is actually dropped in the process).
-The amount of information lost, however, is a single bit pr. byte.
-This means, that a $256 \cdot 256$ pixel, 8 bit picture will be reduced $\dfrac{7}{8}$ of information:
-\begin{align}
-256 px \cdot 256 px \cdot \dfrac{\text{7 bytes}}{\text{8 bytes}} &= \text{57,344 bytes} & \text{1 bit compression} \\
-256 px \cdot 256 px &= \text{65536 bytes} & \text{no compression}
-\end{align}
+The One Bit Compression losses one bit pr. byte.
+This means, that a $256 \cdot 256$ pixel, 8 bit picture (65536 bytes) will be reduced $\dfrac{7}{8}$ of information (57344 bytes).
+Each pixel can be represented with one byte, 256 different colors from pitch black to bright white.
+With this compression there will be 128 different colors to represent the same colors.
 
+Figure \ref{fig:1BitUncompressed} shows the 8 uncompressed bits. 
+Because it is a one bit compression the last bit is cut away from each byte, as seen on Figure \ref{fig:1bitCom}.
+The last byte, \texttt{hhhh hhh0}, should be transfered to the end of each other byte which gives the result of Figure \ref{fig:1BitCompressed}.
 
 
 \begin{figure}[htbp]
@@ -32,7 +35,7 @@ This means, that a $256 \cdot 256$ pixel, 8 bit picture will be reduced $\dfrac{
 			g	& g	& g	& g	& g	& g	& g	& g	\\
 			h	& h	& h	& h	& h	& h	& h	& h	}}
 		\caption{8 uncompressed bytes.}
-		\label{fig:1BitCompressed}
+		\label{fig:1BitUncompressed}
 	\end{subfigure}
 	\begin{subfigure}[t]{0.3\textwidth}\tightdisplaymath
 		\centerline{
@@ -45,7 +48,7 @@ This means, that a $256 \cdot 256$ pixel, 8 bit picture will be reduced $\dfrac{
 			f	& f	& f	& f	& f	& f	& f	& 0	\\
 			g	& g	& g	& g	& g	& g	& g	& 0	\\
 			h \ar[uuuuuuurrrrrrr]	& h\ar[uuuuuurrrrrr]	& h	\ar[uuuuurrrrr]& h \ar[uuuurrrr] & h \ar[uuurrr] & h \ar[uurr] & h \ar[ur] & 0 }}
-	        \caption{Replace last bit with the 8th byte's bit.}
+	        \caption{Replace last bit in each byte with the 8th byte's bit.}
 	        \label{fig:1bitCom}
 	\end{subfigure}
 	\begin{subfigure}[t]{0.3\textwidth}\tightdisplaymath
@@ -59,8 +62,9 @@ This means, that a $256 \cdot 256$ pixel, 8 bit picture will be reduced $\dfrac{
 			f	& f	& f	& f	& f	& f	& f	& h	\\
 			g	& g	& g	& g	& g	& g	& g	& h	}}
 		\caption{7 compressed bytes.}
-		\label{fig:1BitUncompressed}
+		\label{fig:1BitCompressed}
 	\end{subfigure}%
+	\caption{One bit compressions in steps.}
 \end{figure}
 
 
@@ -69,6 +73,13 @@ This means, that a $256 \cdot 256$ pixel, 8 bit picture will be reduced $\dfrac{
 \label{sub:two_bit_compression}
 \FloatBarrier
 
+The Two Bit Compression losses two bits pr. byte.
+This means, that a $256 \cdot 256$ pixel, 8 bit picture (65536 bytes) will be reduced $\dfrac{3}{4}$ of information (49152 bytes).
+With this compression there will be 64 different (versus the original 256) colors to represent the picture.
+
+Figure \ref{fig:2BitUncompressed} shows the 8 uncompressed bits. 
+Because it is a two bit compression the last two bit are cut away from each byte, as seen on Figure \ref{fig:2bitCom}.
+The last byte, \texttt{dddd dd00}, should be transfered to the end of each other byte which gives the result of Figure \ref{fig:2BitCompressed}.
 
 
 \begin{figure}[htbp]
@@ -82,7 +93,7 @@ This means, that a $256 \cdot 256$ pixel, 8 bit picture will be reduced $\dfrac{
 			d	& d	& d	& d	& d	& d	& d	& d }}
 		
 		\caption{4 uncompressed bytes.}
-		\label{fig:2BitCompressed}
+		\label{fig:2BitUncompressed}
 	\end{subfigure}
 	\begin{subfigure}[t]{0.3\textwidth}\tightdisplaymath
 		\centerline{
@@ -102,8 +113,9 @@ This means, that a $256 \cdot 256$ pixel, 8 bit picture will be reduced $\dfrac{
 			b	& b	& b	& b	& b	& b	& d	& d \\
 			c	& c	& c	& c	& c	& c	& d	& d }}
 		\caption{3 compressed bytes.}
-		\label{fig:2BitUncompressed}
+		\label{fig:2BitCompressed}
 	\end{subfigure}%
+	\caption{Two bit compressions in steps.}
 \end{figure}
 
 
@@ -113,6 +125,13 @@ This means, that a $256 \cdot 256$ pixel, 8 bit picture will be reduced $\dfrac{
 \label{sub:four_bit_compression}
 \FloatBarrier
 
+The Four Bit Compression losses four bits pr. byte.
+This means, that a $256 \cdot 256$ pixel, 8 bit picture (65536 bytes) will be reduced $\dfrac{1}{2}$ of information (32768 bytes).
+With this compression there will be 32 different (versus the original 256) colors to represent the picture.
+
+Figure \ref{fig:4BitUncompressed} shows the 8 uncompressed bits. 
+Because it is a two bit compression the last two bit are cut away from each byte, as seen on Figure \ref{fig:4bitCom}.
+The last byte, \texttt{bbbb 0000}, should be transfered to the end of each other byte which gives the result of Figure \ref{fig:4BitCompressed}.
 
 
 \begin{figure}[htbp]
@@ -124,7 +143,7 @@ This means, that a $256 \cdot 256$ pixel, 8 bit picture will be reduced $\dfrac{
 			b	& b	& b	& b	& b	& b	& b	& b }}
 		
 		\caption{2 uncompressed bytes.}
-		\label{fig:4BitCompressed}
+		\label{fig:4BitUncompressed}
 	\end{subfigure}
 	\begin{subfigure}[t]{0.3\textwidth}\tightdisplaymath
 		\centerline{
@@ -140,8 +159,9 @@ This means, that a $256 \cdot 256$ pixel, 8 bit picture will be reduced $\dfrac{
 		\xymatrix@ = 1pt{
 			a	& a	& a	& a	& b	& b	& b	& b	}}
 		\caption{1 compressed byte.}
-		\label{fig:4BitUncompressed}
+		\label{fig:4BitCompressed}
 	\end{subfigure}%
+	\caption{Four bit compressions in steps.}
 \end{figure}
 
 
