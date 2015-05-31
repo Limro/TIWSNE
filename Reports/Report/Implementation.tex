@@ -92,7 +92,7 @@ The \texttt{Compress} method will take a block of uncompressed data as an array 
 The \texttt{Decompress} method takes the compressed data in the \texttt{in} parameter and writes the decompressed data in the array given in the \texttt{out} parameter.
 The decompressed data will always be an array with 1024 bytes.
 
-\textcolor{red}{TODO: Are the following descriptions necessary?}
+\fxnote{Are the descriptions of the algorithms in the following sub sections necessary? I think the figures are enough.}
 
 \subsubsection{One Bit Compression}
 The One Bit Compressions \texttt{Compress} method will split the input data up in chunks of 8 bytes at a time, and for each byte AND \texttt{0xFE} onto it (resulting in the last bit being 0, and leave the rest untouched), and OR one bit from the last byte unto its own last bit.
