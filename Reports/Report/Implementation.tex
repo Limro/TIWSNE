@@ -57,3 +57,12 @@ The \texttt{Compress(...)} method will take 1024 bytes in its first parameter, a
 
 The \texttt{Decompress(...)} method will, too, take the input as the first parameter and output as second parameter. 
 The \texttt{Decompress(...)} method already knows how big the input is, and the output will always 1024 bytes.
+
+The One Bit Compression's \texttt{Compress(...)} method will split the input data up in chunks of 8 bytes at a time, and for each byte AND \texttt{0xFE} onto it (resulting in the last bit being 0, and leave the rest untouched), and OR one bit from the last byte unto its own last bit.
+Then the modified bytes will be added to the output parameter.
+This will be done for all 128 chunks of bytes (8 bytes pr. chunk).
+Lastly it will return the size of the output parameter.
+
+The One Bit Compression's \texttt{Decompress(...)} is the inverse operation of the \texttt{Compress(...)} method.
+For each chunk of seven bytes it will, for each byte, AND \texttt{0xFE} and store them in the output parameter. 
+Then it will look at the last bit for the seven (unmodified) input bytes and shift each of them into a new byte, and store it after the seven modified bytes in the output parameter.
