@@ -53,11 +53,11 @@ Likewise the sequence for transferring data from the TelosB to the PC can be fou
 \end{figure}
 
 The serial communication is initiated by the PC. 
-The \textt{TRANSFER\_OK} signal is used when transferring to the TelosB as the PC is faster than the TelosB. 
+The \texttt{TRANSFER\_OK} signal is used when transferring to the TelosB as the PC is faster than the TelosB. 
 It also ensures that the TelosB is ready to receive. 
 The TelosB has to use clock cycles to read and write to memory. 
 When transferring to the PC it is assumed that the PC is ready before the TelosB starts sending. 
-The PC software starts reconstructing the image to a binary file when the TRANSFER\_DONE is received. 
+The PC software starts reconstructing the image to a binary file when the \texttt{TRANSFER\_DONE} is received. 
 The binary file is loaded in Matlab and the image is reconstructed for human viewing.
 \begin{figure}[H]
 	\centering
@@ -65,7 +65,8 @@ The binary file is loaded in Matlab and the image is reconstructed for human vie
 	\caption{Transfer from TelosB sequence diagram.}
 	\label{transferfromtelos}
 \end{figure}
-The PC software is implemented in Matlab and Java using image processing tools and the TinyOS example project "TestSerial". The TelosB software is based on the code used in multiple examples ranging from "BlockStorage" to "TestSerial". 
+The PC software is implemented in Matlab and Java using image processing tools and the TinyOS example project "TestSerial". 
+The TelosB software is based on the code used in multiple examples ranging from "BlockStorage" to "TestSerial". 
 
 
 
