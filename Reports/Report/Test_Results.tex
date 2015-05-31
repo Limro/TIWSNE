@@ -37,6 +37,9 @@ The purpose is to validate the full system functionality.
 \item Receiver TelosB mote
 \item Sender TelosB mote
 \end{itemize}
+The compressed images can be seen on figure \ref{fig:cameramanresult}. 
+To ensure that the compression-send-decompress procedure was successful it is compared with the same image compressed and decompressed in Matlab. 
+By comparing this two images it is shown that the functionality is as expected. 
 
 \textbf{Procedure}
 \begin{enumerate}
@@ -48,6 +51,7 @@ The purpose is to validate the full system functionality.
 \item Observe the reconstructed image on the PC.
 \end{enumerate}
 
+Looking at the voltage over the shunt, we can see how the system uses power, for the test setup a typical power over time is illustrated in Figure \ref{fig:ImageTransfere}.
 
 \subsection{Energy Test}
 \textbf{Purpose} \\
@@ -61,6 +65,7 @@ The purpose is to validate the energy consumption of the full system functionali
 \item Oscilloscope
 \item 10 Ohm shunt resistor board
 \end{itemize}
+For each compression algorithm 3 measurements was done on both sender and receiver. The measurements can be seen in the table \ref{tab:MeasurementResults}.
 
 \textbf{Procedure}
 \begin{enumerate}
@@ -77,5 +82,37 @@ The purpose is to validate the energy consumption of the full system functionali
 \section{Results}
 This section contains the results of the tests done during the mini project.
 \subsection{Functionality test}
+\begin{table}[h]
+	\begin{tabular}{cllllll}
+
+	\cline{2-5} 
+	\multicolumn{1}{l}{} 	& \multicolumn{2}{l}{Energy {[$J$]}} & \multicolumn{2}{l}{Mean Power [$W$]} &	&	\\ \hline
+	\rowcolor{gr}
+	\multicolumn{1}{l}{Bit Removed}	& Recive	& Send	& Recive	& Sender	& \multicolumn{1}{l}{Transfer Time [$S$]} & \multicolumn{1}{l}{Better Power Than None} \\ \hline
+	% \rowcolor{gr}
+	\multicolumn{1}{c}{\multirow{3}{*}{None}} & 14,638	& 14,405	& 0,639	& 0,626	& \multicolumn{1}{l}{23,0}	& \multicolumn{1}{l}{0\%}	\\  
+	\multicolumn{1}{c}{}	& 14,666	& 14,432	& 0,639	& 0,626	& \multicolumn{1}{l}{23,0}	& \multicolumn{1}{l}{0\%}	\\ 
+	% \rowcolor{gr} 
+	\multicolumn{1}{c}{}	& 14,609	& 14,385	& 0,639	& 0,626	& \multicolumn{1}{l}{23,0}	& \multicolumn{1}{l}{0\%}	\\ \hline
+	% \rowcolor{gr} 
+	\multicolumn{1}{c}{\multirow{3}{*}{One}}  & 13,527	& 13,248	& 0,642	& 0,625	& \multicolumn{1}{l}{21,2}	& \multicolumn{1}{l}{8\%}	\\ %\cline{2-7} 
+	\multicolumn{1}{c}{}	& 13,535	& 13,252	& 0,642	& 0,626	& \multicolumn{1}{l}{21,2}	& \multicolumn{1}{l}{8\%}	\\ %\cline{2-7} 
+	% \rowcolor{gr} 
+	\multicolumn{1}{c}{}	& 13,528	& 13,254	& 0,642	& 0,625	& \multicolumn{1}{l}{21,2}	& \multicolumn{1}{l}{8\%}	\\ \hline
+	% \rowcolor{gr} 
+	\multicolumn{1}{c}{\multirow{3}{*}{Two}}  & 12,469	& 12,189	& 0,643	& 0,625	& \multicolumn{1}{l}{19,5}	& \multicolumn{1}{l}{15\%}	\\ %\cline{2-7} 
+	\multicolumn{1}{c}{}	& 12,477	& 12,206	& 0,643	& 0,626	& \multicolumn{1}{l}{19,5}	& \multicolumn{1}{l}{15\%}	\\ %\cline{2-7} 
+	% \rowcolor{gr}
+	\multicolumn{1}{c}{}	& 12,467	& 12,190	& 0,643	& 0,625	& \multicolumn{1}{l}{19,5}	& \multicolumn{1}{l}{15\%}	\\ \hline
+	% \rowcolor{gr}
+	\multicolumn{1}{c}{\multirow{3}{*}{Four}} & 9,566	& 9,317	& 0,646	& 0,624	& \multicolumn{1}{l}{14,9}	& \multicolumn{1}{l}{35\%}	\\ %\cline{2-7} 
+	\multicolumn{1}{c}{}	& 9,556	& 9,309	& 0,646	& 0,625	& \multicolumn{1}{l}{14,9}	& \multicolumn{1}{l}{35\%}	\\ %\cline{2-7} 
+	% \rowcolor{gr}
+	\multicolumn{1}{c}{}	& 9,533	& 9,298	& 0,644	& 0,625	& \multicolumn{1}{l}{14,9}	& \multicolumn{1}{l}{35\%}	\\ \hline
+	\end{tabular}
+
+	\caption{Measurement Results }
+	\label{tab:MeasurementResults}
+\end{table}
 
 \subsection{Energy Test}
