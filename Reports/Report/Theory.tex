@@ -22,133 +22,21 @@ For instance the four bit compression takes two bytes, \texttt{aaaa\_\_\_\_} and
 
 \subsubsection{One Bit Compression} % (fold)
 \label{sub:one_bit_compression}
-\FloatBarrier
 
 The One Bit Compression gives a compression of $\dfrac{1\ bit}{8\ bit} = 12.5\%$.
 The algorithm takes 8 bytes and maps them into 7 bytes where the least significant bit, of each byte, is lost.
-This can be seen on Figure \ref{fig:1BitCompressingAlgo}.
-
-\begin{figure}[htbp]
-	\centering
-	\begin{subfigure}[t]{0.3\textwidth}\tightdisplaymath
-		\centerline{
-		\xymatrix@ = 2pt{
-			a	& a	& a	& a	& a	& a	& a	& a	\\
-			b	& b	& b	& b	& b	& b	& b	& b \\
-			c	& c	& c	& c	& c	& c	& c	& c \\
-			d	& d	& d	& d	& d	& d	& d	& d \\
-			e	& e	& e	& e	& e	& e	& e	& e \\
-			f	& f	& f	& f	& f	& f	& f	& f	\\
-			g	& g	& g	& g	& g	& g	& g	& g	\\
-			h	& h	& h	& h	& h	& h	& h	& h	}}
-		\caption{8 uncompressed bytes.}
-	\end{subfigure}
-	\begin{subfigure}[t]{0.3\textwidth}\tightdisplaymath
-		\centerline{
-		\xymatrix@=1pt{
-			a	& a	& a	& a	& a	& a	& a	& \_ \\
-			b	& b	& b	& b	& b	& b	& b	& \_ \\
-			c	& c	& c	& c	& c	& c	& c	& \_ \\
-			d	& d	& d	& d	& d	& d	& d	& \_ \\
-			e	& e	& e	& e	& e	& e	& e	& \_ \\
-			f	& f	& f	& f	& f	& f	& f	& \_ \\
-			g	& g	& g	& g	& g	& g	& g	& \_ \\
-			h \ar[uuuuuuurrrrrrr]	& h\ar[uuuuuurrrrrr]	& h	\ar[uuuuurrrrr]& h \ar[uuuurrrr] & h \ar[uuurrr] & h \ar[uurr] & h \ar[ur] & h }}
-	        \caption{Mapping from 8 to 7 bytes where LSB is lost.}
-	\end{subfigure}
-	\begin{subfigure}[t]{0.3\textwidth}\tightdisplaymath
-		\centerline{
-		\xymatrix@ = 1pt{
-			a	& a	& a	& a	& a	& a	& a	& h	\\
-			b	& b	& b	& b	& b	& b	& b	& h \\
-			c	& c	& c	& c	& c	& c	& c	& h \\
-			d	& d	& d	& d	& d	& d	& d	& h \\
-			e	& e	& e	& e	& e	& e	& e	& h \\
-			f	& f	& f	& f	& f	& f	& f	& h	\\
-			g	& g	& g	& g	& g	& g	& g	& h	}}
-		\caption{7 compressed bytes.}
-	\end{subfigure}%
-	\caption{One bit compression algorithm.}
-	\label{fig:1BitCompressingAlgo}
-\end{figure}
 
 \subsubsection{Two bit compression} % (fold)
 \label{sub:two_bit_compression}
-\FloatBarrier
 
 The Two Bit Compression gives a compression of $\dfrac{2\ bit}{8\ bit} = 25\%$.
 The algorithm takes 4 bytes and maps them into 3 bytes where the two least significant bits, of each byte, is lost.
-This can be seen on Figure \ref{fig:2BitCompressingAlgo}.
-
-\begin{figure}[htbp]
-	\centering
-	\begin{subfigure}[t]{0.3\textwidth}\tightdisplaymath
-		\centerline{
-		\xymatrix@ = 2pt{
-			a	& a	& a	& a	& a	& a	& a	& a	\\
-			b	& b	& b	& b	& b	& b	& b	& b \\
-			c	& c	& c	& c	& c	& c	& c	& c \\
-			d	& d	& d	& d	& d	& d	& d	& d }}
-		
-		\caption{4 uncompressed bytes.}
-	\end{subfigure}
-	\begin{subfigure}[t]{0.3\textwidth}\tightdisplaymath
-		\centerline{
-		\xymatrix@=1pt{
-			a	& a	& a	& a	& a	& a	& \_ & \_ \\
-			b	& b	& b	& b	& b	& b	& \_ & \_ \\
-			c	& c	& c	& c	& c	& c	& \_ & \_ \\
-			d \ar[uuurrrrrr]	& d\ar[uuurrrrrr]	& d\ar[uurrrr]	& d\ar[uurrrr]	& d\ar[urr]	& d\ar[urr]	& d	& d }}
-		
-		\caption{Mapping from 4 to 3 bytes.}
-	\end{subfigure}
-	\begin{subfigure}[t]{0.3\textwidth}\tightdisplaymath
-		\centerline{
-		\xymatrix@ = 1pt{
-			a	& a	& a	& a	& a	& a	& d	& d	\\
-			b	& b	& b	& b	& b	& b	& d	& d \\
-			c	& c	& c	& c	& c	& c	& d	& d }}
-		\caption{3 compressed bytes.}
-	\end{subfigure}%
-	\caption{Two bit compression algorithm.}
-	\label{fig:2BitCompressingAlgo}
-\end{figure}
 
 \subsubsection{Four bit compression} % (fold)
 \label{sub:four_bit_compression}
-\FloatBarrier
 
 The Four Bit Compression gives a compression of $\dfrac{4\ bit}{8\ bit} = 50\%$.
 The algorithm takes 2 bytes and maps them into 1 byte where the four least significant bits, of each byte, is lost.
-This can be seen on Figure \ref{fig:4BitCompressingAlgo}.
-
-\begin{figure}[htbp]
-	\centering
-	\begin{subfigure}[t]{0.3\textwidth}\tightdisplaymath
-		\centerline{
-		\xymatrix@ = 2pt{
-			a	& a	& a	& a	& a	& a	& a	& a	\\
-			b	& b	& b	& b	& b	& b	& b	& b }}
-		
-		\caption{2 uncompressed bytes.}
-	\end{subfigure}
-	\begin{subfigure}[t]{0.3\textwidth}\tightdisplaymath
-		\centerline{
-		\xymatrix@=1pt{
-			a	& a	& a	& a	& \_ & \_ & \_ & \_ \\
-			b \ar[urrrr] & b\ar[urrrr] & b\ar[urrrr] & b \ar[urrrr] & b	& b	& b	& b }}
-		
-		\caption{Mapping from 2 to 1 byte.}
-	\end{subfigure}
-	\begin{subfigure}[t]{0.3\textwidth}\tightdisplaymath
-		\centerline{
-		\xymatrix@ = 1pt{
-			a	& a	& a	& a	& b	& b	& b	& b	}}
-		\caption{1 compressed byte.}
-	\end{subfigure}
-	\caption{Four bit compression algorithm.}
-	\label{fig:4BitCompressingAlgo}
-\end{figure}
 
 
 

@@ -63,11 +63,136 @@ The \texttt{Compress(...)} method will take 1024 bytes in its first parameter, a
 The \texttt{Decompress(...)} method will, too, take the input as the first parameter and output as second parameter. 
 The \texttt{Decompress(...)} method already knows how big the input is, and the output will always 1024 bytes.
 
+\subsubsection{One Bit Compression}
 The One Bit Compression's \texttt{Compress(...)} method will split the input data up in chunks of 8 bytes at a time, and for each byte AND \texttt{0xFE} onto it (resulting in the last bit being 0, and leave the rest untouched), and OR one bit from the last byte unto its own last bit.
 Then the modified bytes will be added to the output parameter.
 This will be done for all 128 chunks of bytes (8 bytes pr. chunk).
 Lastly it will return the size of the output parameter.
 
+This can be seen on Figure \ref{fig:1BitCompressingAlgo}.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[t]{0.3\textwidth}\tightdisplaymath
+        \centerline{
+        \xymatrix@ = 2pt{
+            a   & a & a & a & a & a & a & a \\
+            b   & b & b & b & b & b & b & b \\
+            c   & c & c & c & c & c & c & c \\
+            d   & d & d & d & d & d & d & d \\
+            e   & e & e & e & e & e & e & e \\
+            f   & f & f & f & f & f & f & f \\
+            g   & g & g & g & g & g & g & g \\
+            h   & h & h & h & h & h & h & h }}
+        \caption{8 uncompressed bytes.}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.3\textwidth}\tightdisplaymath
+        \centerline{
+        \xymatrix@=2pt{
+            a   & a & a & a & a & a & a & \_ \\
+            b   & b & b & b & b & b & b & \_ \\
+            c   & c & c & c & c & c & c & \_ \\
+            d   & d & d & d & d & d & d & \_ \\
+            e   & e & e & e & e & e & e & \_ \\
+            f   & f & f & f & f & f & f & \_ \\
+            g   & g & g & g & g & g & g & \_ \\
+            h \ar[uuuuuuurrrrrrr]   & h\ar[uuuuuurrrrrr]    & h \ar[uuuuurrrrr]& h \ar[uuuurrrr] & h \ar[uuurrr] & h \ar[uurr] & h \ar[ur] & \_ }}
+            \caption{Mapping from 8 to 7 bytes.}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.3\textwidth}\tightdisplaymath
+        \centerline{
+        \xymatrix@ = 1pt{
+            a   & a & a & a & a & a & a & h \\
+            b   & b & b & b & b & b & b & h \\
+            c   & c & c & c & c & c & c & h \\
+            d   & d & d & d & d & d & d & h \\
+            e   & e & e & e & e & e & e & h \\
+            f   & f & f & f & f & f & f & h \\
+            g   & g & g & g & g & g & g & h }}
+        \caption{7 compressed bytes.}
+    \end{subfigure}%
+    \caption{One bit compression algorithm.}
+    \label{fig:1BitCompressingAlgo}
+\end{figure}
+
 The One Bit Compression's \texttt{Decompress(...)} is the inverse operation of the \texttt{Compress(...)} method.
 For each chunk of seven bytes it will, for each byte, AND \texttt{0xFE} and store them in the output parameter. 
 Then it will look at the last bit for the seven (unmodified) input bytes and shift each of them into a new byte, and store it after the seven modified bytes in the output parameter.
+
+
+
+
+
+\subsubsection{Two Bit Compression}
+The Two Bit Compression's \texttt{Compress(...)} method is similar to the One Bit Compression's \texttt{Compress(...)}.
+The difference is, it will split the input data up in chunks of 4 bytes at a time, and for each byte AND \texttt{0xFC} onto it (resulting in the last two bits being 0, and leave the rest untouched), and OR two bits from the last byte unto its own last two bits.
+
+This can be seen on Figure \ref{fig:2BitCompressingAlgo}.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[t]{0.3\textwidth}\tightdisplaymath
+        \centerline{
+        \xymatrix@ = 2pt{
+            a   & a & a & a & a & a & a & a \\
+            b   & b & b & b & b & b & b & b \\
+            c   & c & c & c & c & c & c & c \\
+            d   & d & d & d & d & d & d & d }}
+        
+        \caption{4 uncompressed bytes.}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.3\textwidth}\tightdisplaymath
+        \centerline{
+        \xymatrix@=2pt{
+            a   & a & a & a & a & a & \_ & \_ \\
+            b   & b & b & b & b & b & \_ & \_ \\
+            c   & c & c & c & c & c & \_ & \_ \\
+            d \ar[uuurrrrrr]    & d\ar[uuurrrrrr]   & d\ar[uurrrr]  & d\ar[uurrrr]  & d\ar[urr] & d\ar[urr] & \_ & \_ }}
+        
+        \caption{Mapping from 4 to 3 bytes.}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.3\textwidth}\tightdisplaymath
+        \centerline{
+        \xymatrix@ = 1pt{
+            a   & a & a & a & a & a & d & d \\
+            b   & b & b & b & b & b & d & d \\
+            c   & c & c & c & c & c & d & d }}
+        \caption{3 compressed bytes.}
+    \end{subfigure}%
+    \caption{Two bit compression algorithm.}
+    \label{fig:2BitCompressingAlgo}
+\end{figure}
+
+Like \texttt{Compress(...)} method is similar, so is the \texttt{Decompress(...)}
+
+
+\subsubsection{Four Bit Compression}
+This can be seen on Figure \ref{fig:4BitCompressingAlgo}.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[t]{0.3\textwidth}\tightdisplaymath
+        \centerline{
+        \xymatrix@ = 2pt{
+            a   & a & a & a & a & a & a & a \\
+            b   & b & b & b & b & b & b & b }}
+        
+        \caption{2 uncompressed bytes.}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.3\textwidth}\tightdisplaymath
+        \centerline{
+        \xymatrix@=1pt{
+            a   & a & a & a & \_ & \_ & \_ & \_ \\
+            b \ar[urrrr] & b\ar[urrrr] & b\ar[urrrr] & b \ar[urrrr] & \_ & \_ & \_ & \_ }}
+        
+        \caption{Mapping from 2 to 1 byte.}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.3\textwidth}\tightdisplaymath
+        \centerline{
+        \xymatrix@ = 1pt{
+            a   & a & a & a & b & b & b & b }}
+        \caption{1 compressed byte.}
+    \end{subfigure}
+    \caption{Four bit compression algorithm.}
+    \label{fig:4BitCompressingAlgo}
+\end{figure}
