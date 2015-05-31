@@ -72,20 +72,13 @@ The algorithm takes 8 bytes and maps them into 7 bytes where the least significa
 	\label{fig:1BitCompressingAlgo}
 \end{figure}
 
-
-
 \subsubsection{Two bit compression} % (fold)
 \label{sub:two_bit_compression}
 \FloatBarrier
 
-The Two Bit Compression losses two bits pr. byte.
-This means, that a $256 \cdot 256$ pixel, 8 bit picture (65536 bytes) will be reduced $\dfrac{3}{4}$ of information (49152 bytes).
-With this compression there will be 64 different (versus the original 256) colors to represent the picture.
+The Two Bit Compression gives a compression of $\dfrac{2\ bit}{8\ bit} = 25\%$.
 
-Figure \ref{fig:2BitUncompressed} shows the 8 uncompressed bits. 
-Because it is a two bit compression the last two bit are cut away from each byte, as seen on Figure \ref{fig:2bitCom}.
-The last byte, \texttt{dddd dd00}, should be transfered to the end of each other byte which gives the result of Figure \ref{fig:2BitCompressed}.
-
+The algorithm takes 4 bytes and maps them into 3 bytes where the two least significant bits, of each byte, is lost. This can be seen on Figure \ref{fig:2BitCompressingAlgo}.
 
 \begin{figure}[htbp]
 	\centering
@@ -98,18 +91,16 @@ The last byte, \texttt{dddd dd00}, should be transfered to the end of each other
 			d	& d	& d	& d	& d	& d	& d	& d }}
 		
 		\caption{4 uncompressed bytes.}
-		\label{fig:2BitUncompressed}
 	\end{subfigure}
 	\begin{subfigure}[t]{0.3\textwidth}\tightdisplaymath
 		\centerline{
 		\xymatrix@=1pt{
-			a	& a	& a	& a	& a	& a	& 0	& 0	\\
-			b	& b	& b	& b	& b	& b	& 0	& 0 \\
-			c	& c	& c	& c	& c	& c	& 0	& 0 \\
-			d \ar[uuurrrrrr]	& d\ar[uuurrrrrr]	& d\ar[uurrrr]	& d\ar[uurrrr]	& d\ar[urr]	& d\ar[urr]	& 0	& 0 }}
+			a	& a	& a	& a	& a	& a	& \_ & \_ \\
+			b	& b	& b	& b	& b	& b	& \_ & \_ \\
+			c	& c	& c	& c	& c	& c	& \_ & \_ \\
+			d \ar[uuurrrrrr]	& d\ar[uuurrrrrr]	& d\ar[uurrrr]	& d\ar[uurrrr]	& d\ar[urr]	& d\ar[urr]	& d	& d }}
 		
-		\caption{Replace last two bits with the 4th byte's bits.}
-		\label{fig:2bitCom}
+		\caption{Mapping from 4 to 3 bytes.}
 	\end{subfigure}
 	\begin{subfigure}[t]{0.3\textwidth}\tightdisplaymath
 		\centerline{
@@ -118,9 +109,9 @@ The last byte, \texttt{dddd dd00}, should be transfered to the end of each other
 			b	& b	& b	& b	& b	& b	& d	& d \\
 			c	& c	& c	& c	& c	& c	& d	& d }}
 		\caption{3 compressed bytes.}
-		\label{fig:2BitCompressed}
 	\end{subfigure}%
-	\caption{Two bit compressions in steps.}
+	\caption{Two bit compression algorithm.}
+	\label{fig:2BitCompressingAlgo}
 \end{figure}
 
 
