@@ -1,9 +1,7 @@
 %!TEX root = Main.tex
 \section{Tests}
-Description of the tests made along with the procedures behind these test.
-
+This section contains the description of the tests done during the mini project.
 \subsection{Functionality test}
-
 \subsubsection{Compression}
 Each method in each compression type was tested seperately.
 To keep it simple, a quick diagram was drawn to show what the expected outcome of some simple input would be, tested in seperate project solutions and validated.
@@ -17,15 +15,44 @@ The output was, as expected, only even numbers since the last bit was sliced off
 
 The same approach was used for both the Two Bit Compression and the Four Bit Compression.
 
-\subsubsection{Serial communication}
+\subsubsection{Full System Test}
+\textbf{Purpose:}\\
+The purpose of the test is to test the full system functionality of the system in order to validate functionality before doing any energy measurements.
 
-\subsubsection{Radio}
+\textbf{Test equipment:}
+\begin{itemize}
+\item PC with TestSerial Java software
+\item Receiver TelosB mote
+\item Sender TelosB mote
+\end{itemize}
 
+\textbf{Procedure:}\\
+Connect the Sender TelosB mote to the PC. Load the image onto the sender TelosB using the terminal command: \texttt{Java TestSerial -w}.\\
+When the transfer to the Sender TelosB mote is complete, reset the mote. Observe the LED2 on the Receiver mode for when the wireless transmission is the complete.\\
+When the transmission is complete, connect the Receiver TelosB mote to the PC and execute the terminal command: \texttt{Java TestSerial -r}. Observe the reconstructed image on the PC.
 
 \subsection{Energy Test}
+\textbf{Purpose:}\\
+The purpose of the test is to test the energy consumption of the full system functionality.
+
+\textbf{Test equipment:}
+\begin{itemize}
+\item PC with TestSerial Java software
+\item Receiver TelosB mote
+\item Sender TelosB mote
+\item Oscilloscope
+\item 10 Ohm shunt resistor board
+\end{itemize}
+
+\textbf{Procedure:}\\
+Write the compression type to the two TelosB motes.\\
+Connect the Sender TelosB mote to the PC. Load the image onto the sender TelosB using the terminal command: \texttt{Java TestSerial -w}.\\
+When the transfer to the Sender TelosB mote is complete, set the oscilloscope to single mode and reset the mote. Observe the LED2 on the Receiver mode for when the wireless transmission is the complete. Observe and save the reading from the oscilloscope.\\
+Connect the Receiver TelosB mote to the PC and execute the terminal command: \texttt{Java TestSerial -r}. Observe the reconstructed image on the PC.
+
 
 \section{Results}
-
+This section contains the results of the tests done during the mini project.
 \subsection{Functionality test}
 
 \subsection{Energy Test}
