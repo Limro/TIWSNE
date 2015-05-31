@@ -17,8 +17,9 @@ The TelosB motes are either configured as sender or receiver.  The sender has th
 The Serial Communication block of the TelosB mote interacts with the PC's Serial Communication block as can be read in the Serial Communication subsection. The Radio Communication block interacts with other TelosB motes as can be read in the Radio Communication subsection. Lastly the Compression block has entails the compression and decompression of the image data. This is explained in the Compression block subsection.
 
 \subsection{Serial Communication}
-The serial communication is responsible for the transfer of the image to and from the TelosB. A header file is available to both the PC software and the TelosB program. It contains a series of defines that are used for the communication messages. The defines can be found in table \ref{definetable}.
+The serial communication is responsible for the transfer of data to and from the TelosB. A header file is available to both the PC software and the TelosB program. It contains a series of defines that are used for the communication messages. The defines can be found in table \ref{definetable}.
 \begin{table}[H]
+\centering
     \begin{tabular}{|l|l|l|}
     \hline
     Name                  & Val & Description                                               \\ \hline
@@ -32,19 +33,21 @@ The serial communication is responsible for the transfer of the image to and fro
     \caption{Defines for serial communication.}
     \label{definetable}
 \end{table}
+Using these defines and the TinyOS struct of message\_t, the PC and TelosB mote can exchange information. The sequence for transferring data to the TelosB can be found in figure \ref{transfertotelos}. Likewise the sequence for transferring data from the TelosB to the PC can be found in figure \ref{transferfromtelos}.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\textwidth]{PCtoTelosb}
 	\caption{Transfer to TelosB sequence diagram.}
 	\label{transfertotelos}
 \end{figure}
-
+The serial communication is initiated by the PC. The TRANSFER\_OK signal is used when transferring to the TelosB as the PC is faster than the TelosB. It also ensures that the TelosB is ready to receive. The TelosB has to use clock cycles to read and write to memory. When transferring to the PC it is assumed that the PC is ready before the TelosB starts sending. The PC software starts reconstructing the image to a binary file when the TRANSFER\_DONE is received. The binary file is loaded in Matlab and the image is reconstructed for human viewing.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\textwidth]{PCfromTelosb}
 	\caption{Transfer from TelosB sequence diagram.}
 	\label{transferfromtelos}
 \end{figure}
+The PC software is implemented in Matlab and Java using image processing tools and the TinyOS example project "TestSerial". The TelosB software is based on the code used in multiple examples ranging from "BlockStorage" to "TestSerial". 
 
 \subsection{Radio Block}
 
