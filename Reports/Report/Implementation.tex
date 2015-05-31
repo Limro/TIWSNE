@@ -48,23 +48,25 @@ The serial communication is responsible for the transfer of the image to and fro
 
 \subsection{Radio Block}
 
-\subsection{Compression block}
-The compression blocks have a common interface: 
+\subsection{Compression}
+The compression modules share a common interface: 
 
 \begin{itemize}
     \item \texttt{uint16\_t Compress(uint8\_t* in, uint8\_t* out)}
     \item \texttt{void Decompress(uint8\_t *in, uint8\_t *out)}
 \end{itemize}
 
-This interface allows the different implementation to be accessed with the same code -- only specifying the desired block.
+This interface allows for easy switching between the different implementations.
 
-The \texttt{Compress(...)} method will take 1024 bytes in its first parameter, and return the compressed data in its second parameter, and return the size of the compression as return output.
+The \texttt{Compress} method will take a block of uncompressed data as an array of 1024 bytes in the \texttt{in} parameter, and write the compressed data to the array given in the \texttt{out} parameter. The method returns the length of the compressed data.
 
-The \texttt{Decompress(...)} method will, too, take the input as the first parameter and output as second parameter. 
-The \texttt{Decompress(...)} method already knows how big the input is, and the output will always 1024 bytes.
+The \texttt{Decompress} method takes the compressed data in the \texttt{in} parameter and writes the decompressed data in the array given in the \texttt{out} parameter.
+The decompressed data will always be an array with 1024 bytes.
+
+\textcolor{red}{TODO: Are the following descriptions necessary?}
 
 \subsubsection{One Bit Compression}
-The One Bit Compression's \texttt{Compress(...)} method will split the input data up in chunks of 8 bytes at a time, and for each byte AND \texttt{0xFE} onto it (resulting in the last bit being 0, and leave the rest untouched), and OR one bit from the last byte unto its own last bit.
+The One Bit Compressions \texttt{Compress} method will split the input data up in chunks of 8 bytes at a time, and for each byte AND \texttt{0xFE} onto it (resulting in the last bit being 0, and leave the rest untouched), and OR one bit from the last byte unto its own last bit.
 Then the modified bytes will be added to the output parameter.
 This will be done for all 128 chunks of bytes (8 bytes pr. chunk).
 Lastly it will return the size of the output parameter.
@@ -115,7 +117,7 @@ This can be seen on Figure \ref{fig:1BitCompressingAlgo}.
     \label{fig:1BitCompressingAlgo}
 \end{figure}
 
-The One Bit Compression's \texttt{Decompress(...)} is the inverse operation of the \texttt{Compress(...)} method.
+The One Bit Compression's \texttt{Decompress} is the inverse operation of the \texttt{Compress} method.
 For each chunk of seven bytes it will, for each byte, AND \texttt{0xFE} and store them in the output parameter. 
 Then it will look at the last bit for the seven (unmodified) input bytes and shift each of them into a new byte, and store it after the seven modified bytes in the output parameter.
 
@@ -124,7 +126,7 @@ Then it will look at the last bit for the seven (unmodified) input bytes and shi
 
 
 \subsubsection{Two Bit Compression}
-The Two Bit Compression's \texttt{Compress(...)} method is similar to the One Bit Compression's \texttt{Compress(...)}.
+The Two Bit Compression's \texttt{Compress} method is similar to the One Bit Compression's \texttt{Compress}.
 The difference is, it will split the input data up in chunks of 4 bytes at a time, and for each byte AND \texttt{0xFC} onto it (resulting in the last two bits being 0, and leave the rest untouched), and OR two bits from the last byte unto its own last two bits.
 
 This can be seen on Figure \ref{fig:2BitCompressingAlgo}.
@@ -163,7 +165,7 @@ This can be seen on Figure \ref{fig:2BitCompressingAlgo}.
     \label{fig:2BitCompressingAlgo}
 \end{figure}
 
-Like \texttt{Compress(...)} method is similar, so is the \texttt{Decompress(...)} method. 
+Like \texttt{Compress} method is similar, so is the \texttt{Decompress} method. 
 For each chunk of 3 bytes it will, for each byte, AND \texttt{0xFC} and store them in the output parameter. 
 Then it will look at the last two bits for the three (unmodified) input bytes and shift each of them into a new byte, and store it after the three modified bytes in the output parameter.
 
@@ -172,7 +174,7 @@ Then it will look at the last two bits for the three (unmodified) input bytes an
 
 \subsubsection{Four Bit Compression}
 
-The Four Bit Compression's \texttt{Compress(...)} method than both the One- and Two Bit Compression's \texttt{Compress(...)}.
+The Four Bit Compression's \texttt{Compress} method than both the One- and Two Bit Compression's \texttt{Compress}.
 The difference is, it will split the input data up in chunks of 2 bytes at a time,  AND \texttt{0xF0} onto it (resulting in the last four bits being 0, and leave the rest untouched), and OR the first four  bits from the second byte unto the first byte's own last four bits.
 
 This can be seen on Figure \ref{fig:4BitCompressingAlgo}.
@@ -206,5 +208,5 @@ This can be seen on Figure \ref{fig:4BitCompressingAlgo}.
     \label{fig:4BitCompressingAlgo}
 \end{figure}
 
-The \texttt{Decompress(...)} method will AND \texttt{0xF0} on each byte and store them in the output parameter. 
+The \texttt{Decompress} method will AND \texttt{0xF0} on each byte and store them in the output parameter. 
 Then it will shift at the last four bits of the unmodified input byte into a new byte, and store it after the previous modified byte in the output parameter.
