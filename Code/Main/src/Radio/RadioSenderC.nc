@@ -1,5 +1,6 @@
 #include "RadioInfo.h"
 #include "Timer.h"
+#include "printf.h"
 
 module RadioSenderC{
 	provides interface RadioTransfereSenderI; 
@@ -28,11 +29,13 @@ implementation{
 	
 	void CreatePacketsPacket(uint8_t *ptr,uint16_t length, uint16_t id)
 	{
+		int i = 0; 
 		radio_packet_msg_t* payload = (radio_packet_msg_t*)call Packet.getPayload(&packet, sizeof(radio_packet_msg_t));
 		payload->ID = id; 
 		payload->TotalSize = length;
 		payload->len = (length/PAYLOADSIZE) >= id ? PAYLOADSIZE : (length%PAYLOADSIZE);
-		memcpy(payload->Data,&ptr[(id-1)*PAYLOADSIZE],payload->len);
+		memcpy(payload->Data, &ptr[(id-1)*PAYLOADSIZE],payload->len);
+		
 	}
 	
 	bool SendNextPacket()

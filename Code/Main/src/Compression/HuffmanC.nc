@@ -3,7 +3,6 @@
 
 module HuffmanC{
 	provides interface Compression;
-	uses interface Leds;
 }
 implementation{
 	
@@ -217,17 +216,11 @@ int16_t Huffman_Compress(uint8_t *in, uint8_t *out, uint16_t insize)
 	/* Initialize bitstream */
 	_Huffman_InitBitstream(&stream, out);
 	
-	call Leds.led0On();
-	
 	/* Calculate and sort histogram for input data */
 	_Huffman_Hist(in, sym, insize);
 
-	call Leds.led1On();
-
 	/* Build Huffman tree */
 	_Huffman_MakeTree(sym, &stream);
-	
-	call Leds.led2On();
 	
 	/* Sort histogram - first symbol first (bubble sort) */
 	do

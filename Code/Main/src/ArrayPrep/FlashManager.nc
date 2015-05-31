@@ -3,6 +3,10 @@ interface FlashManager{
 	
 	command void SetData(uint8_t *ptr, uint16_t blockindex, uint8_t blocklength);
 	
+	command void erase();
+	
+	event void eraseDone();
+	
 	event void GetDone(uint8_t *ptr, uint16_t length);
 	event void SetDone();
 }

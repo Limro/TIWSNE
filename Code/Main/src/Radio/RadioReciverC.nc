@@ -1,4 +1,5 @@
 #include "RadioInfo.h"
+#include "printf.h"
 
 module RadioReciverC{
 	provides interface RadioTransfereReciverI; 
@@ -72,10 +73,13 @@ implementation{
       		{      		
       			if(lastID+1 == rcm->ID)
       			{
+      				int i = 0; 
       				lastID++; 
-      				memcpy(rcm->Data,&buffer[rcm->ID*PAYLOADSIZE], rcm->len);
+      				memcpy(&buffer[(rcm->ID-1)*PAYLOADSIZE], rcm->Data, rcm->len);
       				Rxlen += rcm->len;
-      				
+  		
+      				     							
+					
       				if(Rxlen == rcm->TotalSize)
       				{
       					ReciveDone(SUCCESS);

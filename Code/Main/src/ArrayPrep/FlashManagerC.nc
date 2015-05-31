@@ -21,13 +21,15 @@ implementation{
 	
 	void RequestWrite()
 	{
-		uint8_t * pointer = ptr_ + blockCount_*BLOCKPART_VOLUME;
+		uint8_t*  pointer = ptr_ + (blockCount_*BLOCKPART_VOLUME);
 		call Flash.write(pointer, blockindex_+blockCount_);			
 	}
 	
 	
 	event void Flash.eraseDone(error_t result){
-		// TODO Auto-generated method stub
+		if(isWorking == FALSE) return;
+		isWorking = FALSE;
+		signal FlashManager.eraseDone();
 	}
 
 	event void Flash.writeDone(error_t result){
@@ -49,31 +51,41 @@ implementation{
 		
 		if(blockCount_ == blocklength_)
 		{
-			signal FlashManager.GetDone(ptr_, blocklength_*BLOCKPART_VOLUME);
-			isWorking = FALSE; 	
+			isWorking = FALSE; 
+			signal FlashManager.GetDone(ptr_, blocklength_*BLOCKPART_VOLUME);	
 		}
 		else
 			RequestRead();
 	}
 
 	command void FlashManager.SetData(uint8_t *ptr, uint16_t blockindex, uint8_t blocklength){
-		ptr_ = ptr; 
-		blockindex_ = blockindex; 
-		blocklength_ = blocklength; 
-		blockCount_ = 0; 
-		isWorking = TRUE;
-		RequestWrite();
+		if(isWorking == FALSE)
+		{
+			ptr_ = ptr; 
+			blockindex_ = blockindex; 
+			blocklength_ = blocklength; 
+			blockCount_ = 0; 
+			isWorking = TRUE;
+			RequestWrite();
+		}
 	}
 
 	command void FlashManager.GetData(uint8_t *ptr, uint16_t blockindex, uint8_t blocklength){
-		ptr_ = ptr; 
-		blockindex_ = blockindex; 
-		blocklength_ = blocklength; 
-		blockCount_ = 0; 
-		isWorking = TRUE;
-		RequestRead();
-		
+		if(isWorking == FALSE)
+		{
+			ptr_ = ptr; 
+			blockindex_ = blockindex; 
+			blocklength_ = blocklength; 
+			blockCount_ = 0; 
+			isWorking = TRUE;
+			RequestRead();
+		}
 	}
 	
+	command void FlashManager.erase()
+	{
+		isWorking = TRUE;
+		call Flash.erase();
+	}
 	
 }

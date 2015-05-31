@@ -9,6 +9,7 @@ implementation {
 	components TestSerialC as Serial, MainC;
 	components SerialActiveMessageC as AM;
 	components FlashC;
+	components FlashC as Flash2;
 	components new BlockStorageC(BLOCK_VOLUME);
 	components SenderAppC;
 	components FlashManagerC;
@@ -18,6 +19,8 @@ implementation {
 	components RadioSenderC as Sender;
   	components new AMSenderC(6);
   	components ActiveMessageC;
+  	
+  	components FourBitCompression as comp; 
   	
   	
   	Sender.AMSend -> AMSenderC;
@@ -37,8 +40,9 @@ implementation {
 	FlashC.BlockRead -> BlockStorageC.BlockRead;
 	FlashC.BlockWrite -> BlockStorageC.BlockWrite;
 	
-	FlashManagerC.Flash ->FlashC;
+	FlashManagerC.Flash ->Flash2;
 	
+	SenderAppC.comp -> comp;
 	SenderAppC.Flash ->FlashManagerC;
 	SenderAppC.Notify -> UserButtonC;
 	SenderAppC.Leds -> LedsC;
