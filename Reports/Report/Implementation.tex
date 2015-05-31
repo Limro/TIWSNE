@@ -10,37 +10,55 @@ The full system is comprised of one or two PCs and two TelosB motes configured a
 	\caption{Full System Diagram.}
 	\label{FullSystem}
 \end{figure}
-The PC software has three responsibilities. It takes an image and converts it to a binary file. This file is then wrapped into an array and prepared such that it can be transmitted to the TelosB mote. The transmission is handled by the Serial Communication block and can be seen in the Serial Communication subsection.
+The PC software has three responsibilities. It takes an image and converts it to a binary file. This file is then wrapped into an array and prepared such that it can be transmitted to the TelosB mote. The transmission is handled by the Serial Communication block and can be seen in the section \ref{sec:Serial-Communication}.
 
 The TelosB motes are either configured as sender or receiver.  The sender has the responsibility of getting an image from the PC and transmitting it over the radio to the receiver mote. The receiver has the responsibility to receive the image from radio and transmitting it to the PC.
 
-The Serial Communication block of the TelosB mote interacts with the PC's Serial Communication block as can be read in the Serial Communication subsection. The Radio Communication block interacts with other TelosB motes as can be read in the Radio Communication subsection. Lastly the Compression block has entails the compression and decompression of the image data. This is explained in the Compression block subsection.
+The Serial Communication block of the TelosB mote interacts with the PC's Serial Communication block as can be read in section \ref{sec:Serial-Communication}. 
+The Radio Communication block interacts with other TelosB motes as can be read in section \ref{sec:Radio-Block}. 
+Lastly the Compression block has entails the compression and decompression of the image data. 
+This is explained in the section \ref{sec:Compression-block}.
 
 \subsection{Serial Communication}
+\label{sec:Serial-Communication}
 The serial communication is responsible for the transfer of data to and from the TelosB. A header file is available to both the PC software and the TelosB program. It contains a series of defines that are used for the communication messages. The defines can be found in table \ref{definetable}.
 \begin{table}[H]
 \centering
-    \begin{tabular}{|l|l|l|}
+    \begin{tabular}{lll}
     \hline
     Name                  & Val & Description                                               \\ \hline
-    TRANSFER\_TO\_TELOS   & 1     & Used to tell the TelosB to prepare to receive the image. \\ \hline
-    TRANSFER\_OK          & 2     & Used to tell the PC that the transfer was ok.             \\ \hline
-    TRANSFER\_FAIL        & 3     & Used to tell the PC that the transfer failed.             \\ \hline
-    TRANSFER\_READY       & 4     & Used to tell the PC that the transfer can be initiated.   \\ \hline
-    TRANSFER\_FROM\_TELOS & 5     & Used to tell the TelosB to transfer the image to the PC.  \\ \hline
+    \rowcolor{gr}
+    TRANSFER\_TO\_TELOS   & 1     & Used to tell the TelosB to prepare to receive the image. \\ %\hline
+    TRANSFER\_OK          & 2     & Used to tell the PC that the transfer was ok.             \\ %\hline
+    \rowcolor{gr}
+    TRANSFER\_FAIL        & 3     & Used to tell the PC that the transfer failed.             \\ %\hline
+    TRANSFER\_READY       & 4     & Used to tell the PC that the transfer can be initiated.   \\ %\hline
+    \rowcolor{gr}
+    TRANSFER\_FROM\_TELOS & 5     & Used to tell the TelosB to transfer the image to the PC.  \\ %\hline
     TRANSFER\_DONE        & 6     & Used to tell the PC that the image transfer is done.      \\ \hline
     \end{tabular}
     \caption{Defines for serial communication.}
     \label{definetable}
 \end{table}
-Using these defines and the TinyOS struct of message\_t, the PC and TelosB mote can exchange information. The sequence for transferring data to the TelosB can be found in figure \ref{transfertotelos}. Likewise the sequence for transferring data from the TelosB to the PC can be found in figure \ref{transferfromtelos}.
+
+Using these defines and the TinyOS struct of \texttt{message\_t}, the PC and TelosB mote can exchange information. 
+The sequence for transferring data to the TelosB can be found in figure \ref{transfertotelos}. 
+Likewise the sequence for transferring data from the TelosB to the PC can be found in figure \ref{transferfromtelos}.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\textwidth]{PCtoTelosb}
 	\caption{Transfer to TelosB sequence diagram.}
 	\label{transfertotelos}
 \end{figure}
-The serial communication is initiated by the PC. The TRANSFER\_OK signal is used when transferring to the TelosB as the PC is faster than the TelosB. It also ensures that the TelosB is ready to receive. The TelosB has to use clock cycles to read and write to memory. When transferring to the PC it is assumed that the PC is ready before the TelosB starts sending. The PC software starts reconstructing the image to a binary file when the TRANSFER\_DONE is received. The binary file is loaded in Matlab and the image is reconstructed for human viewing.
+
+The serial communication is initiated by the PC. 
+The \textt{TRANSFER\_OK} signal is used when transferring to the TelosB as the PC is faster than the TelosB. 
+It also ensures that the TelosB is ready to receive. 
+The TelosB has to use clock cycles to read and write to memory. 
+When transferring to the PC it is assumed that the PC is ready before the TelosB starts sending. 
+The PC software starts reconstructing the image to a binary file when the TRANSFER\_DONE is received. 
+The binary file is loaded in Matlab and the image is reconstructed for human viewing.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\textwidth]{PCfromTelosb}
@@ -49,9 +67,18 @@ The serial communication is initiated by the PC. The TRANSFER\_OK signal is used
 \end{figure}
 The PC software is implemented in Matlab and Java using image processing tools and the TinyOS example project "TestSerial". The TelosB software is based on the code used in multiple examples ranging from "BlockStorage" to "TestSerial". 
 
+
+
 \subsection{Radio Block}
+\label{sec:Radio-Block}
+
+
+
+
 
 \subsection{Compression block}
+\label{sec:Compression-block}
+
 The compression blocks have a common interface: 
 
 \begin{itemize}

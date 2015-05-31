@@ -2,7 +2,8 @@
 \section{Theory}
 
 \subsection{Image}
-We use the $256 \times 256$ pixel grayscale cameraman image (Figure \ref{fig:image_cameraman}). The image is saved in the TelosB flash as a binary file. Each pixel is represented with one byte, which gives a grayscale resolution of 256 shades.
+We use the $256 \times 256$ pixel grayscale cameraman image (Figure \ref{fig:image_cameraman}). 
+The image is saved in the TelosB flash as a binary file. Each pixel is represented with one byte, which gives a grayscale resolution of 256 shades.
 
 \begin{figure}[ht!]
 \centering
@@ -14,7 +15,7 @@ We use the $256 \times 256$ pixel grayscale cameraman image (Figure \ref{fig:ima
 \subsection{Compression}
 
 We use three different lossy compression algorithms in this project.
-They have a simple implementation and are fast to compute, but they are not very good at retaining image quality compared to e.g. JPEG which uses discrete cosine transform and huffman coding.
+They have a simple implementation and are fast to compute, but they are not very good at retaining image quality compared to e.g. JPEG which uses discrete cosine transform and Huffman coding.
 
 Our compression algorithms work by throwing away the least significant bit/bits from every byte in the image.
 For instance the four bit compression takes two bytes, \texttt{aaaa\_\_\_\_} and \texttt{bbbb\_\_\_\_}, and compresses them to a single byte \texttt{aaaabbbb}, where \texttt{a}, \texttt{b} and \texttt{\_} is a bit. Using this method, the image has been compressed 50\%.
