@@ -114,21 +114,13 @@ This can be seen on Figure \ref{fig:2BitCompressingAlgo}.
 	\label{fig:2BitCompressingAlgo}
 \end{figure}
 
-
-
-
 \subsubsection{Four bit compression} % (fold)
 \label{sub:four_bit_compression}
 \FloatBarrier
 
-The Four Bit Compression losses four bits pr. byte.
-This means, that a $256 \cdot 256$ pixel, 8 bit picture (65536 bytes) will be reduced $\dfrac{1}{2}$ of information (32768 bytes).
-With this compression there will be 32 different (versus the original 256) colors to represent the picture.
-
-Figure \ref{fig:4BitUncompressed} shows the 8 uncompressed bits. 
-Because it is a two bit compression the last two bit are cut away from each byte, as seen on Figure \ref{fig:4bitCom}.
-The last byte, \texttt{bbbb 0000}, should be transfered to the end of each other byte which gives the result of Figure \ref{fig:4BitCompressed}.
-
+The Four Bit Compression gives a compression of $\dfrac{4\ bit}{8\ bit} = 50\%$.
+The algorithm takes 2 bytes and maps them into 1 byte where the four least significant bits, of each byte, is lost.
+This can be seen on Figure \ref{fig:4BitCompressingAlgo}.
 
 \begin{figure}[htbp]
 	\centering
@@ -139,25 +131,23 @@ The last byte, \texttt{bbbb 0000}, should be transfered to the end of each other
 			b	& b	& b	& b	& b	& b	& b	& b }}
 		
 		\caption{2 uncompressed bytes.}
-		\label{fig:4BitUncompressed}
 	\end{subfigure}
 	\begin{subfigure}[t]{0.3\textwidth}\tightdisplaymath
 		\centerline{
 		\xymatrix@=1pt{
-			a	& a	& a	& a	& 0	& 0	& 0	& 0	\\
-			b \ar[urrrr] & b\ar[urrrr] & b\ar[urrrr] & b \ar[urrrr] & 0	& 0	& 0	& 0 }}
+			a	& a	& a	& a	& \_ & \_ & \_ & \_ \\
+			b \ar[urrrr] & b\ar[urrrr] & b\ar[urrrr] & b \ar[urrrr] & b	& b	& b	& b }}
 		
-		\caption{Replace last four bits with the 2nd byte's bits.}
-		\label{fig:4bitCom}
+		\caption{Mapping from 2 to 1 byte.}
 	\end{subfigure}
 	\begin{subfigure}[t]{0.3\textwidth}\tightdisplaymath
 		\centerline{
 		\xymatrix@ = 1pt{
 			a	& a	& a	& a	& b	& b	& b	& b	}}
 		\caption{1 compressed byte.}
-		\label{fig:4BitCompressed}
-	\end{subfigure}%
-	\caption{Four bit compressions in steps.}
+	\end{subfigure}
+	\caption{Four bit compression algorithm.}
+	\label{fig:4BitCompressingAlgo}
 \end{figure}
 
 
