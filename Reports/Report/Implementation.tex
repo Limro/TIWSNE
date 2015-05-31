@@ -99,7 +99,6 @@ The One Bit Compression's \texttt{Compress(...)} method will split the input dat
 Then the modified bytes will be added to the output parameter.
 This will be done for all 128 chunks of bytes (8 bytes pr. chunk).
 Lastly it will return the size of the output parameter.
-
 This can be seen on Figure \ref{fig:1BitCompressingAlgo}.
 
 \begin{figure}[htbp]
@@ -157,7 +156,6 @@ Then it will look at the last bit for the seven (unmodified) input bytes and shi
 \subsubsection{Two Bit Compression}
 The Two Bit Compression's \texttt{Compress(...)} method is similar to the One Bit Compression's \texttt{Compress(...)}.
 The difference is, it will split the input data up in chunks of 4 bytes at a time, and for each byte AND \texttt{0xFC} onto it (resulting in the last two bits being 0, and leave the rest untouched), and OR two bits from the last byte unto its own last two bits.
-
 This can be seen on Figure \ref{fig:2BitCompressingAlgo}.
 
 \begin{figure}[htbp]
@@ -205,7 +203,6 @@ Then it will look at the last two bits for the three (unmodified) input bytes an
 
 The Four Bit Compression's \texttt{Compress(...)} method than both the One- and Two Bit Compression's \texttt{Compress(...)}.
 The difference is, it will split the input data up in chunks of 2 bytes at a time,  AND \texttt{0xF0} onto it (resulting in the last four bits being 0, and leave the rest untouched), and OR the first four  bits from the second byte unto the first byte's own last four bits.
-
 This can be seen on Figure \ref{fig:4BitCompressingAlgo}.
 
 
