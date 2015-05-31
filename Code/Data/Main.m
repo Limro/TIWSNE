@@ -7,15 +7,20 @@ K = Kchoise{i};
 
 for l = 1:length(K)
     T = csvread(K{l,1},2,0);
-    plot(T(:,2))
     data = T(K{l,2}:K{l,3},2);
        
     
-    data = (data.^2)./10;
+    data = ((2.7-data).^2)./10;
     data = filter(ones(1,100)*(1/100),1,data);
-    figure,
-    hold on
-    plot(data,'r');
+    
+    O = csvread(R{l,1},2,0);
+    figure, hold on, plot(T(:,1),T(:,2), 'b'),  plot(O(:,1),O(:,2), 'g');
+    title('Shunt voltage (10 ohm)')
+    ylabel('Voltage [V]');
+    xlabel('Time [S]');
+    g = cell(1,2);
+    g{2}='Send'; g{1}='Recive';
+    legend(g);
     
     
     s = mean(data); 
@@ -33,15 +38,21 @@ end
 
 end
 
-figure,
 
+for i = 1:4
+    tres(i,1) = mean(res(((i-1)*3)+1:i*3)',1);
+    tres(i,2) = mean(res(((i-1)*3)+1:i*3),2);
+end
+
+figure,
 l = cell(1,2);
 l{1}='Send'; l{2}='Recive';   
 
+res = tres;
 
 ax1 = subplot(2,1,1);
 h = bar(ax1,res)
-set(gca,'XTickLabel',{'','8bit -> byte', '', '', '7 bit -> byte','','','6 bit -> byte','','','4 bit -> byte'})
+set(gca,'XTickLabel',{'8bit -> byte', '7 bit -> byte','6 bit -> byte','4 bit -> byte'})
 colormap(summer(2));
 grid on
 legend(h,l);
@@ -54,4 +65,4 @@ colormap(summer(2));
 grid on
 legend(h,l);
 ylabel('Energy [J]');
-set(gca,'XTickLabel',{'','8bit -> byte', '', '', '7 bit -> byte','','','6 bit -> byte','','','4 bit -> byte'})
+set(gca,'XTickLabel',{'8bit -> byte', '7 bit -> byte','6 bit -> byte','4 bit -> byte'})
