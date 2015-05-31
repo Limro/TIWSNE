@@ -1,14 +1,11 @@
 %!TEX root = Main.tex
 \section{Discussion}
-Why and How do we save energy by compressing?
+When we look at the full system test we see that the implementation fulfils the basic requirements of transmitting a compressed image to a sink (the receiver) where the sink reconstructs the image. The sender mote is also able to compress the image in multiple different ways. This is seen in figure \ref{fig:cameramanresult}. Visual focus is needed in order to differentiate between the original image, the 1-bit and the 2-bit compressed image while the 4-bit image is clearly different.
 
+The compression algorithms used in the mini project might not relate very well to the real world. They are a lot faster than  JPEG for example, but not very effective at retaining image quality.
 
+When observing the energy measurements result (table \ref{tab:MeasurementResults}) it is clear that the power use is near constant and the transfer time is the variant. This confirms that the compression algorithms are cheap in power usage. When using the 4-bit compression the transfer time is reduced from 23 seconds to 14,9 seconds. This corresponds to a 35\% improvement in energy usage.
 
-\textit{\fxnote{Some of my thoughts on our compression.}
-Our compression algorithms might not relate very well to the real world.
-They are alot faster than e.g. JPEG, but not very effective at retaining image quality.
-In a real project you might want to use e.g. JPEG, because it compresses more and retains image quality better, but it is more expensive to run.
-We havn't tested how a very computational heavy compression with high compression rate compares to no compression.
-But maybe we can give a qualified guess based on our results?}
+For future projects it would be interesting to implement more computation heavy algorithms like JPEG in order to re-evaluate whether the power usage will be significantly higher.
 
 \section{Conclusion}
