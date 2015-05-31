@@ -72,9 +72,14 @@ The TelosB software is based on the "BlockStorage" and "TestSerial" examples.
 
 \subsection{Radio Communication}\label{sec:Radio-Block}
 
-For transfer of the data, the telosb radio framework is used. since the existing telosb modules is optimized for wireless sensor networks the standard radio module uses a fixed packet size. This is done since the normal application of a wireless sensor sends a fix size measurement. Furthermore is the packet size relatively small since a measurement point often generates a small amount of data. For the image transfer application the image data is large and the data size can vary between compressions.
+For transfer of the data, the TelosB radio framework is used. 
+Since the existing TelosB modules are optimized for wireless sensor networks, the standard radio module uses a fixed packet size. 
+This is done since the normal application of a wireless sensor sends a fix size measurement. 
+Furthermore is the packet size relatively small, since a measurement point often generates a small amount of data. 
+For the image transfer application the image data is large and the data size can vary between compressions.
 
-A series of design steps is therefore taken to fit the very flexible application needed to the more static platform provided. to fit the dynamic message to to the fix size architecture the data split into smaller sizes of maximum 50 bytes. 
+A series of design steps is therefore taken to fit the very flexible application needed to the more static platform provided. 
+To fit the dynamic message to to the fix size architecture the data split into smaller sizes of maximum 50 bytes. 
 
 \begin{figure}[H]
 	\centering
@@ -84,14 +89,14 @@ A series of design steps is therefore taken to fit the very flexible application
 \end{figure}
 
 Rather than dynamically changing the packet size, to fit the data, the packet size is kept constant at the 50 bytes, and information about how much data is valid in the packet is added. 
-Since there sometime is send a packet with some invalid data, there is introduced some overhead in the radio communication. 
+Since there sometimes are send a packet with some invalid data, there is introduced some overhead in the radio communication. 
 This can be seen in figure \ref{fig:RadioPacketCut}. 
-This is not desirable for a real wireless sensor network, but since the scope for this project is to measure communication cost vs. computation cost this will only have an major impact on the measurements if the difference in size between the compressed and original image is less than 50 bytes, and is therefore tolerable.
+This is not desirable for a real wireless sensor network, but since the scope for this project is to measure communication cost vs. computation cost, this will only have an major impact on the measurements, if the difference in size between the compressed and original image is less than 50 bytes, and is therefore tolerable.
 
-when chopping the file in smaller pieces it is important to be able to reconstruct the image on the receiver side, and detect if a packet is lost. 
+When chopping the file in smaller pieces, it is important to be able to reconstruct the image on the receiver side, and detect if a packet is lost. 
 In order to accomplish this a packet counter that increments for each packet is added to the packet. 
-By looking at this you can detect out of order packets, and therefore conclude that a packet is lost. 
-In order to know when all packet is received the total size is added to the packet.  
+By looking at this, the system can detect out of order packets, and therefore conclude that a packet is lost. 
+In order to know when all packets are received, the total size is added to the packet.
 
 When receiving the first packet the receiver then know how much memory it will have to allocate to contain the entire message. 
 
