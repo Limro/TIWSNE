@@ -4,6 +4,20 @@ Description of the tests made along with the procedures behind these test.
 
 \subsection{Functionality test}
 
+\subsubsection{Compression}
+Each method in each compression type was tested seperately.
+To keep it simple, a quick diagram was drawn to show what the expected outcome of some simple input would be, tested in seperate project solutions and validated.
+
+For the One Bit Compression, an array with eight bytes in, all equal \texttt{0x0000 0010} was sent through the \texttt{Compress(...)} method.
+The result was seven bytes, all equal \texttt{0x0000 0010} but the last, which was equal \texttt{0x0000 0011}.
+The \texttt{Decompress(...)} had this output as input and its output validated to be all \texttt{0x0000 0010}.
+
+
+\subsubsection{Serial communication}
+
+\subsubsection{Radio}
+
+
 \subsection{Energy Test}
 
 \section{Results}
