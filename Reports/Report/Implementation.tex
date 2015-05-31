@@ -44,13 +44,11 @@ The serial communication is responsible for the transfer of the image to and fro
 \subsection{Radio Block}
 
 \subsection{Compression block}
-
-
 The compression blocks have a common interface: 
 
 \begin{itemize}
-    \item \texttt{uint16_t Compress(uint8_t* in, uint8_t* out)}
-    \item \texttt{void Decompress(uint8_t *in, uint8_t *out)}
+    \item \texttt{uint16\_t Compress(uint8\_t* in, uint8\_t* out)}
+    \item \texttt{void Decompress(uint8\_t *in, uint8\_t *out)}
 \end{itemize}
 
 This interface allows the different implementation to be accessed with the same code -- only specifying the desired block.
@@ -58,3 +56,4 @@ This interface allows the different implementation to be accessed with the same 
 The \texttt{Compress(...)} method will take 1024 bytes in its first parameter, and return the compressed data in its second parameter, and return the size of the compression as return output.
 
 The \texttt{Decompress(...)} method will, too, take the input as the first parameter and output as second parameter. 
+The \texttt{Decompress(...)} method already knows how big the input is, and the output will always 
