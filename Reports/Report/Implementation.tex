@@ -1,59 +1,85 @@
 %!TEX root = Main.tex
 \section{Implementation}
-The following chapter seeks to explain the implementation of the mini project.
+This section explains the implementation of the mini project.
 
 \subsection{Overall Design}
-The full system is comprised of one or two PCs and two TelosB motes configured as a receiver and a sender. The system can be describes as seen in figure \ref{FullSystem}. 
+The full system is comprised of one or two PCs and two TelosB motes configured as a receiver and a sender. An overview of the system can be seen in Figure \ref{FullSystem}.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=1\textwidth]{FullSystem}
 	\caption{Full System Diagram.}
 	\label{FullSystem}
 \end{figure}
-The PC software has three responsibilities. It takes an image and converts it to a binary file. This file is then wrapped into an array and prepared such that it can be transmitted to the TelosB mote. The transmission is handled by the Serial Communication block and can be seen in the Serial Communication subsection.
 
-The TelosB motes are either configured as sender or receiver.  The sender has the responsibility of getting an image from the PC and transmitting it over the radio to the receiver mote. The receiver has the responsibility to receive the image from radio and transmitting it to the PC.
+The Image Formatting block takes an image and converts it to a binary file.
+The Data Wrapping block prepares the image such that it can be transmitted to the TelosB mote.
+The transmission is handled by the Serial Communication block which is descriped in detail in section \ref{sec:Serial-Communication}.
 
-The Serial Communication block of the TelosB mote interacts with the PC's Serial Communication block as can be read in the Serial Communication subsection. The Radio Communication block interacts with other TelosB motes as can be read in the Radio Communication subsection. Lastly the Compression block has entails the compression and decompression of the image data. This is explained in the Compression block subsection.
+The TelosB motes are either configured as sender or receiver.  The sender has the responsibility of receiving an image from the PC and transmitting it over the radio to the receiver mote. The receiver has the responsibility of receiving the image from radio and transmit it to the PC.
+
+The Serial Communication block of the TelosB motes communicates with the PC's Serial Communication block as descriped in section \ref{sec:Serial-Communication}.\\
+The Radio Communication block communicates with the other TelosB mote as descriped in section \ref{sec:Radio-Block}. \\
+The Compression block does the compression and decompression of the image as descriped in section \ref{sec:Compression-block}.
 
 \subsection{Serial Communication}
-The serial communication is responsible for the transfer of data to and from the TelosB. A header file is available to both the PC software and the TelosB program. It contains a series of defines that are used for the communication messages. The defines can be found in table \ref{definetable}.
+\label{sec:Serial-Communication}
+The serial communication is responsible for transfering the image to and from the TelosB mote. A header file is available to both the PC software and the TelosB program. It contains a series of defines that are used for the communication messages. The defines can be found in Table \ref{definetable}.
 \begin{table}[H]
 \centering
-    \begin{tabular}{|l|l|l|}
+    \begin{tabular}{lll}
     \hline
     Name                  & Val & Description                                               \\ \hline
-    TRANSFER\_TO\_TELOS   & 1     & Used to tell the TelosB to prepare to receive the image. \\ \hline
-    TRANSFER\_OK          & 2     & Used to tell the PC that the transfer was ok.             \\ \hline
-    TRANSFER\_FAIL        & 3     & Used to tell the PC that the transfer failed.             \\ \hline
-    TRANSFER\_READY       & 4     & Used to tell the PC that the transfer can be initiated.   \\ \hline
-    TRANSFER\_FROM\_TELOS & 5     & Used to tell the TelosB to transfer the image to the PC.  \\ \hline
+    \rowcolor{gr}
+    TRANSFER\_TO\_TELOS   & 1     & Used to tell the TelosB to prepare to receive the image. \\ %\hline
+    TRANSFER\_OK          & 2     & Used to tell the PC that the transfer was ok.             \\ %\hline
+    \rowcolor{gr}
+    TRANSFER\_FAIL        & 3     & Used to tell the PC that the transfer failed.             \\ %\hline
+    TRANSFER\_READY       & 4     & Used to tell the PC that the transfer can be initiated.   \\ %\hline
+    \rowcolor{gr}
+    TRANSFER\_FROM\_TELOS & 5     & Used to tell the TelosB to transfer the image to the PC.  \\ %\hline
     TRANSFER\_DONE        & 6     & Used to tell the PC that the image transfer is done.      \\ \hline
     \end{tabular}
     \caption{Defines for serial communication.}
     \label{definetable}
 \end{table}
-Using these defines and the TinyOS struct of message\_t, the PC and TelosB mote can exchange information. The sequence for transferring data to the TelosB can be found in figure \ref{transfertotelos}. Likewise the sequence for transferring data from the TelosB to the PC can be found in figure \ref{transferfromtelos}.
+
+Using these defines and the TinyOS struct of \texttt{message\_t}, the PC and TelosB mote can exchange data. 
+The sequence for transferring data from the PC to the TelosB can be found in Figure \ref{transfertotelos}. 
+Likewise the sequence for transferring data from the TelosB to the PC can be found in Figure \ref{transferfromtelos}.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\textwidth]{PCtoTelosb}
 	\caption{Transfer to TelosB sequence diagram.}
 	\label{transfertotelos}
 \end{figure}
-The serial communication is initiated by the PC. The TRANSFER\_OK signal is used when transferring to the TelosB as the PC is faster than the TelosB. It also ensures that the TelosB is ready to receive. The TelosB has to use clock cycles to read and write to memory. When transferring to the PC it is assumed that the PC is ready before the TelosB starts sending. The PC software starts reconstructing the image to a binary file when the TRANSFER\_DONE is received. The binary file is loaded in Matlab and the image is reconstructed for human viewing.
+
+The serial communication is initiated by the PC.
+The \texttt{TRANSFER\_OK} signal is used when transferring to the TelosB, to tell the PC that the transfer is done and that the TelosB is ready to receive the next package.
+When transferring to the PC it is assumed that the PC is ready before the TelosB starts sending.
+The PC software starts reconstructing the image to a binary file when the \texttt{TRANSFER\_DONE} is received.
+The binary file is loaded in Matlab and the image is reconstructed for human viewing.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\textwidth]{PCfromTelosb}
 	\caption{Transfer from TelosB sequence diagram.}
 	\label{transferfromtelos}
 \end{figure}
-The PC software is implemented in Matlab and Java using image processing tools and the TinyOS example project "TestSerial". The TelosB software is based on the code used in multiple examples ranging from "BlockStorage" to "TestSerial". 
+The PC software is implemented in Matlab and Java using image processing tools and the TinyOS example project "TestSerial".
+The TelosB software is based on the "BlockStorage" and "TestSerial" examples.
 
-\subsection{Radio Communication}
 
-For transfer of the data, the telosb radio framework is used. since the existing telosb modules is optimized for wireless sensor networks the standard radio module uses a fixed packet size. This is done since the normal application of a wireless sensor sends a fix size measurement. Furthermore is the packet size relatively small since a measurement point often generates a small amount of data. For the image transfer application the image data is large and the data size can vary between compressions.
+\subsection{Radio Communication}\label{sec:Radio-Block}
 
-A series of design steps is therefore taken to fit the very flexible application needed to the more static platform provided. to fit the dynamic message to to the fix size architecture the data split into smaller sizes of maximum 50 bytes. 
+For transfering data between motes, the TelosB radio framework is used. 
+Since the existing TelosB modules are optimized for wireless sensor networks, the standard radio module uses a fixed packet size. 
+This is done since the normal application of a wireless sensor is sending a fixed-size measurement. 
+Furthermore the packet size is relatively small, since a single measurement often generates a small amount of data. 
+For the image transfer application the data size is large and it varies with different compression methods.
+
+A series of design steps is therefore taken to fit the dynamic data to the more static platform provided. 
+To fit the data to the fixed-size architecture, the data is split into smaller packets of maximum 50 bytes. 
 
 \begin{figure}[H]
 	\centering
@@ -62,9 +88,15 @@ A series of design steps is therefore taken to fit the very flexible application
 	\label{fig:RadioPacketCut}
 \end{figure}
 
-Rather than dynamically changing the packet size, to fit the data, the packet size is kept constant at the 50 bytes, and information about how much data is valid in the packet is added. Since there sometime is send a packet with some invalid data, there is introduced some overhead in the radio communication. This can be seen in figure \ref{fig:RadioPacketCut}. This is not desirable for a real wireless sensor network, but since the scope for this project is to measure communication cost vs. computation cost this will only have an major impact on the measurements if the difference in size between the compressed and original image is less than 50 bytes, and is therefore tolerable.
+Rather than dynamically changing the packet size to fit the data, the packet size is kept constant at  50 bytes, and information about how much data is valid in the packet is added. 
+Since there sometimes are send a packet with some invalid data, there is introduced some overhead in the radio communication. 
+This is illustrated in Figure \ref{fig:RadioPacketCut}. 
+This is not desirable for a real wireless sensor network, but is negligible in our project since the relative amount of invalid data to valid data, is very small. \fxnote{Is this correct?}
 
-when chopping the file in smaller pieces it is important to be able to reconstruct the image on the receiver side, and detect if a packet is lost. In order to accomplish this a packet counter that increments for each packet is added to the packet. by looking at this you can detect out of order packets, and therefore conclude that a packet is lost. In order to know when all packet is received the total size is added to the packet.  
+When chopping the file into smaller pieces, it is important to be able to reconstruct the image on the receiver side, and detect if a packet is lost. 
+In order to accomplish this a packet counter that increments for each packet is added to the packet. 
+By looking at this, the system can detect out of order packets, and therefore conclude that a packet is lost. 
+In order to know when all packets are received, the total size is added to the packet.
 
 When receiving the first packet the receiver then know how much memory it will have to allocate to contain the entire message. 
 
@@ -76,40 +108,41 @@ When receiving the first packet the receiver then know how much memory it will h
 	\label{fig:PacketSeq}
 \end{figure}
 
+As seen on Figure \ref{fig:PacketSeq} we have chosen to create a dedicated receiver and sender module. 
+This have been done in order to better separate the energy needed for sending and receiving. 
+After the first packet is received, the receiver asks for a buffer to store the whole message in. 
+When a packet is received a message received event is called. 
+This event is also called with a error message in case of a packet is received out of order, and the reception is terminated. 
 
-
-
-
-As seen on figure \ref{fig:PacketSeq} we have chosen to create a dedicated receiver and sender module. this have been done in order to better separate the energy needed for sending and receiving. On the figure it shows how after the first packet et asks for a buffer to store the whole message in. When a packet is received a message received event is called. This event is also called with a error message in case of a packet is received out of order, and the reception is terminated. 
-
-As shown, there is no acknowledgement or retransmission. For a practical application this features would be a necessary and important to ensure reliability. But in this project predictability is more important than reliability.  This is to ensure that packet loss and transmission not add unnecessary energy usage, and deminicis otherwise optimal solutions.  
-
-
-
+As seen on the figure, there is no acknowledgement or retransmission. 
+For a practical application this features would be necessary and important to ensure reliability.
+In this project predictability is more important than reliability, this is to ensure that packet loss and retransmission does not add unnecessary energy usage which reduces determinism.
 
 
 \subsection{Compression block}
-\label{subs:compression}
-The compression blocks have a common interface: 
+\label{sec:Compression-block}
+
+The compression modules share a common interface: 
 
 \begin{itemize}
     \item \texttt{uint16\_t Compress(uint8\_t* in, uint8\_t* out)}
     \item \texttt{void Decompress(uint8\_t *in, uint8\_t *out)}
 \end{itemize}
 
-This interface allows the different implementation to be accessed with the same code -- only specifying the desired block.
+This interface allows for easy switching between the different implementations.
 
-The \texttt{Compress(...)} method will take 1024 bytes in its first parameter, and return the compressed data in its second parameter, and return the size of the compression as return output.
+The \texttt{Compress} method will take a block of uncompressed data as an array of 1024 bytes in the \texttt{in} parameter, and write the compressed data to the array given in the \texttt{out} parameter. The method returns the length of the compressed data.
 
-The \texttt{Decompress(...)} method will, too, take the input as the first parameter and output as second parameter. 
-The \texttt{Decompress(...)} method already knows how big the input is, and the output will always 1024 bytes.
+The \texttt{Decompress} method takes the compressed data in the \texttt{in} parameter and writes the decompressed data in the array given in the \texttt{out} parameter.
+The decompressed data will always be an array with 1024 bytes.
+
+\fxnote{Are the descriptions of the algorithms in the following sub sections necessary? I think the figures are enough.}
 
 \subsubsection{One Bit Compression}
-The One Bit Compression's \texttt{Compress(...)} method will split the input data up in chunks of 8 bytes at a time, and for each byte AND \texttt{0xFE} onto it (resulting in the last bit being 0, and leave the rest untouched), and OR one bit from the last byte unto its own last bit.
+The One Bit Compressions \texttt{Compress} method will split the input data up in chunks of 8 bytes at a time, and for each byte AND \texttt{0xFE} onto it (resulting in the last bit being 0, and leave the rest untouched), and OR one bit from the last byte unto its own last bit.
 Then the modified bytes will be added to the output parameter.
 This will be done for all 128 chunks of bytes (8 bytes pr. chunk).
 Lastly it will return the size of the output parameter.
-
 This can be seen on Figure \ref{fig:1BitCompressingAlgo}.
 
 \begin{figure}[htbp]
@@ -156,7 +189,7 @@ This can be seen on Figure \ref{fig:1BitCompressingAlgo}.
     \label{fig:1BitCompressingAlgo}
 \end{figure}
 
-The One Bit Compression's \texttt{Decompress(...)} is the inverse operation of the \texttt{Compress(...)} method.
+The One Bit Compression's \texttt{Decompress} is the inverse operation of the \texttt{Compress} method.
 For each chunk of seven bytes it will, for each byte, AND \texttt{0xFE} and store them in the output parameter. 
 Then it will look at the last bit for the seven (unmodified) input bytes and shift each of them into a new byte, and store it after the seven modified bytes in the output parameter.
 
@@ -165,9 +198,8 @@ Then it will look at the last bit for the seven (unmodified) input bytes and shi
 
 
 \subsubsection{Two Bit Compression}
-The Two Bit Compression's \texttt{Compress(...)} method is similar to the One Bit Compression's \texttt{Compress(...)}.
+The Two Bit Compression's \texttt{Compress} method is similar to the One Bit Compression's \texttt{Compress}.
 The difference is, it will split the input data up in chunks of 4 bytes at a time, and for each byte AND \texttt{0xFC} onto it (resulting in the last two bits being 0, and leave the rest untouched), and OR two bits from the last byte unto its own last two bits.
-
 This can be seen on Figure \ref{fig:2BitCompressingAlgo}.
 
 \begin{figure}[htbp]
@@ -204,7 +236,7 @@ This can be seen on Figure \ref{fig:2BitCompressingAlgo}.
     \label{fig:2BitCompressingAlgo}
 \end{figure}
 
-Like \texttt{Compress(...)} method is similar, so is the \texttt{Decompress(...)} method. 
+Like \texttt{Compress} method is similar, so is the \texttt{Decompress} method. 
 For each chunk of 3 bytes it will, for each byte, AND \texttt{0xFC} and store them in the output parameter. 
 Then it will look at the last two bits for the three (unmodified) input bytes and shift each of them into a new byte, and store it after the three modified bytes in the output parameter.
 
@@ -213,9 +245,8 @@ Then it will look at the last two bits for the three (unmodified) input bytes an
 
 \subsubsection{Four Bit Compression}
 
-The Four Bit Compression's \texttt{Compress(...)} method than both the One- and Two Bit Compression's \texttt{Compress(...)}.
+The Four Bit Compression's \texttt{Compress} method than both the One- and Two Bit Compression's \texttt{Compress}.
 The difference is, it will split the input data up in chunks of 2 bytes at a time,  AND \texttt{0xF0} onto it (resulting in the last four bits being 0, and leave the rest untouched), and OR the first four  bits from the second byte unto the first byte's own last four bits.
-
 This can be seen on Figure \ref{fig:4BitCompressingAlgo}.
 
 
@@ -247,5 +278,5 @@ This can be seen on Figure \ref{fig:4BitCompressingAlgo}.
     \label{fig:4BitCompressingAlgo}
 \end{figure}
 
-The \texttt{Decompress(...)} method will AND \texttt{0xF0} on each byte and store them in the output parameter. 
+The \texttt{Decompress} method will AND \texttt{0xF0} on each byte and store them in the output parameter. 
 Then it will shift at the last four bits of the unmodified input byte into a new byte, and store it after the previous modified byte in the output parameter.
