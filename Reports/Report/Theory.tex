@@ -12,6 +12,9 @@ The image is saved in the TelosB flash as a binary file. Each pixel is represent
 \label{fig:image_cameraman}
 \end{figure}
 
+\subsection{Energy Consumption}
+Energy consumption is important when we look at wireless sensor networks. The component with the most energy consumption of the TelosB is the Radio circuitry as seen in the TelosB datasheet\fxnote{Reference to the datasheet. Put it in the datasheet folder on CD}. The challenge is to choose when to use the radio and how often. When comparing the radio current (23 mA) with the processing current (1.8 mA), it is clear that it is better to process data before sending it. Processing data in order to reduce package size or transmission rate is the basis principle of this mini project. 
+
 \subsection{Compression}
 
 We use three different lossy compression algorithms in this project.
@@ -41,6 +44,3 @@ The algorithm takes 4 bytes and maps them into 3 bytes where the two least signi
 
 The Four Bit Compression gives a compression of $\dfrac{4\ bit}{8\ bit} = 50\%$.
 The algorithm takes 2 bytes and maps them into 1 byte where the four least significant bits, of each byte, is lost.
-
-
-
