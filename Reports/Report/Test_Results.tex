@@ -28,6 +28,7 @@ The purpose is to validate the compression and decompression method of each comp
 \end{enumerate}
 
 \subsubsection{Full System Test}
+\label{subs:FST}
 \textbf{Purpose}\\
 The purpose is to validate the full system functionality.
 
@@ -82,8 +83,30 @@ For each compression algorithm 3 measurements was done on both sender and receiv
 \section{Results}
 This section contains the results of the tests done during the mini project.
 
+Before the energy measurements are made, the functionality was validated. Using the test setup in section \ref{subs:FST}, an image was written to the flash, and then compressed and sent. 
 
-\subsection{Functionality test}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth] {cameramanresult}
+	\caption{Compression Results}
+	\label{fig:cameramanresult}
+\end{figure}
+
+The compressed images can be seen on figure \ref{fig:cameramanresult}. To ensure that the compression-send-decompress procedure was successful it is compared with the same image compressed and decompressed in Matlab. By comparing this two images it is shown that the functionality is as expected. 
+
+
+Looking at the voltage over the shunt, we can see how the system uses power, for the test setup a typical power over time is illustrated in figure \ref{fig:ImageTransfere}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth ]{ImageTransfere}
+	\caption{ Shut voltage during image transfer. }
+	\label{fig:ImageTransfere}
+\end{figure}
+
+For each compression algorithm 3 measurements was done on both sender and receiver. The measurements can be seen in the table \ref{tab:MeasurementResults} 
+
+
 \begin{table}[h]
 	\begin{tabular}{cllllll}
 
@@ -116,5 +139,3 @@ This section contains the results of the tests done during the mini project.
 	\caption{Measurement Results }
 	\label{tab:MeasurementResults}
 \end{table}
-
-\subsection{Energy Test}
