@@ -1,12 +1,13 @@
 %!TEX root = Main.tex
 \section{Theory}
 
-\subsection{Compressions}
+\subsection{Compression}
 
-The idea of simple compressing bits, is to take two byte, e.g. \texttt{xxxx yyyy} and \texttt{zzzz vvvv}, and compress them to \texttt{xxxx zzzz}.
-This way the four least significant bits have been compressed away, and the input has been reduced from 2 bytes to one byte.
+We use three different lossy compression algorithms in this project.
+They have a simple implementation and are fast to compute, but they are not very good at retaining information compared to e.g. JPEG which uses discrete cosine transform and huffman coding.
 
-The simple bit compression is a lossy compression (meaning, that information is actually dropped in the process).
+Our compression algorithms work by throwing away the least significant bit/bits from every byte in the image.
+For instance the four bit compression takes two bytes, \texttt{aaaa\_\_\_\_} and \texttt{bbbb\_\_\_\_}, and compresses them to a single byte \texttt{aaaabbbb}, where \texttt{a}, \texttt{b} and \texttt{\_} is a bit. Using this method, the image has been compressed 50\%.
 
 
 \subsubsection{One Bit Compression} % (fold)
