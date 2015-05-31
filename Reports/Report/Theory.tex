@@ -1,6 +1,16 @@
 %!TEX root = Main.tex
 \section{Theory}
 
+\subsection{Image}
+We use the $256 \times 256$ pixel grayscale cameraman image (Figure \ref{fig:image_cameraman}). The image is saved in the TelosB flash as a binary file. Each pixel is represented with one byte, which gives a grayscale resolution of 256 shades.
+
+\begin{figure}[ht!]
+\centering
+\includegraphics{cameraman}
+\caption{Cameraman image used in the project.}
+\label{fig:image_cameraman}
+\end{figure}
+
 \subsection{Compression}
 
 We use three different lossy compression algorithms in this project.
