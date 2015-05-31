@@ -163,11 +163,20 @@ This can be seen on Figure \ref{fig:2BitCompressingAlgo}.
     \label{fig:2BitCompressingAlgo}
 \end{figure}
 
-Like \texttt{Compress(...)} method is similar, so is the \texttt{Decompress(...)}
+Like \texttt{Compress(...)} method is similar, so is the \texttt{Decompress(...)} method. 
+For each chunk of 3 bytes it will, for each byte, AND \texttt{0xFC} and store them in the output parameter. 
+Then it will look at the last two bits for the three (unmodified) input bytes and shift each of them into a new byte, and store it after the three modified bytes in the output parameter.
+
+
 
 
 \subsubsection{Four Bit Compression}
+
+The Four Bit Compression's \texttt{Compress(...)} method than both the One- and Two Bit Compression's \texttt{Compress(...)}.
+The difference is, it will split the input data up in chunks of 2 bytes at a time,  AND \texttt{0xF0} onto it (resulting in the last four bits being 0, and leave the rest untouched), and OR the first four  bits from the second byte unto the first byte's own last four bits.
+
 This can be seen on Figure \ref{fig:4BitCompressingAlgo}.
+
 
 \begin{figure}[htbp]
     \centering
@@ -196,3 +205,6 @@ This can be seen on Figure \ref{fig:4BitCompressingAlgo}.
     \caption{Four bit compression algorithm.}
     \label{fig:4BitCompressingAlgo}
 \end{figure}
+
+The \texttt{Decompress(...)} method will AND \texttt{0xF0} on each byte and store them in the output parameter. 
+Then it will shift at the last four bits of the unmodified input byte into a new byte, and store it after the previous modified byte in the output parameter.
