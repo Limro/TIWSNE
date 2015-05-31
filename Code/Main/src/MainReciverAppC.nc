@@ -4,28 +4,28 @@
 #include "Flash.h"
 #include "StorageVolumes.h"
 
-configuration MainAppC {}
+configuration MainReciverAppC {}
 implementation {
 	components TestSerialC as Serial, MainC;
 	components SerialActiveMessageC as AM;
 	components FlashC;
-	components FlashC as Flash2;
+	components FlashC as FlashC2;
 	components new BlockStorageC(BLOCK_VOLUME);
-	components SenderAppC;
+	components ReciverAppC;
 	components FlashManagerC;
 	components UserButtonC;
 	components LedsC;
 	
-	components RadioSenderC as Sender;
-  	components new AMSenderC(6);
+	components RadioReciverC as Reciver;
+  	components new AMReceiverC(6);
   	components ActiveMessageC;
   	
   	components FourBitCompression as comp; 
   	
   	
-  	Sender.AMSend -> AMSenderC;
-  	Sender.AMControl -> ActiveMessageC;
-  	Sender.Packet -> AMSenderC;
+  	Reciver.AMControl -> ActiveMessageC;
+  	Reciver.Packet ->AMReceiverC;
+  	Reciver.Receive ->AMReceiverC;
 
 	Serial.Boot -> MainC.Boot;
 	Serial.Control -> AM;
@@ -40,14 +40,13 @@ implementation {
 	FlashC.BlockRead -> BlockStorageC.BlockRead;
 	FlashC.BlockWrite -> BlockStorageC.BlockWrite;
 	
-	FlashManagerC.Flash ->Flash2;
+	FlashManagerC.Flash ->FlashC2;
 	
-	SenderAppC.comp -> comp;
-	SenderAppC.Flash ->FlashManagerC;
-	SenderAppC.Notify -> UserButtonC;
-	SenderAppC.Leds -> LedsC;
-	SenderAppC.Boot -> MainC;
-	SenderAppC.Radio -> Sender;
+	ReciverAppC.comp -> comp;
+	ReciverAppC.Flash ->FlashManagerC;
+	ReciverAppC.Leds -> LedsC;
+	ReciverAppC.Boot -> MainC;
+	ReciverAppC.Radio -> Reciver;
 }
 
 

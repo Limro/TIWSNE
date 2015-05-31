@@ -1,5 +1,5 @@
 clear all, close all, clc;
-addpath('F:\TinyOS\TinyOSShared')
+addpath('C:\Users\Rune\Desktop\shared tinyos')
 fh = fopen('reimage.bin', 'r');
 image = vec2mat(fread(fh), 256)' / 256;
 imshow(image);

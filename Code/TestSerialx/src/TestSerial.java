@@ -140,7 +140,7 @@ public class TestSerial implements MessageListener {
 					}
 				}
 				try{
-					FileOutputStream out = new FileOutputStream("/mnt/hgfs/TinyOSShared/reimage.bin");
+					FileOutputStream out = new FileOutputStream("/mnt/hgfs/shared tinyos/reimage.bin");
 					try{
 						out.write(recData);
 						out.close();

@@ -2,7 +2,7 @@
 #define RADIO_INFO_H
 
 
-#define PAYLOADSIZE 10
+#define PAYLOADSIZE 50
 
 
 typedef nx_struct radio_packet_msg_t {

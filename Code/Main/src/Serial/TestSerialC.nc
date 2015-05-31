@@ -29,6 +29,8 @@ implementation {
  
 	int sendIndex = 0;
 	char sendArray[64];
+	
+	bool isSerial = FALSE;
   
 	event void Boot.booted() {
 		call Control.start();
@@ -78,6 +80,7 @@ implementation {
 			{
 				// getting Image from PC
 				// Delete Flash content
+				isSerial = TRUE;
 				sendIndex = 0;
 				call Flash.erase();
 			}
@@ -88,6 +91,7 @@ implementation {
 			else if (statusMsg->status == TRANSFER_DONE)
 			{
 				// full transfer completed
+				isSerial = FALSE;
 			}
 			else if(statusMsg->status == TRANSFER_FAIL)
 			{
@@ -100,6 +104,7 @@ implementation {
 			else if(statusMsg->status == TRANSFER_FROM_TELOS)
 			{
 				//Start remote transfer (to PC)
+				isSerial = TRUE;
 				sendIndex = 0;
 				call Flash.read(sendArray, sendIndex);	
 			}
@@ -143,6 +148,7 @@ implementation {
 			}
 			else
 			{
+				isSerial = FALSE;
 				sendStatusMessage(TRANSFER_DONE);
 			}
 		}
@@ -155,12 +161,18 @@ implementation {
 	// Flash Events
 
 	event void Flash.writeDone(error_t result){
+		if(isSerial)
+		{
 			sendStatusMessage(TRANSFER_OK);
+			}
 	}
 
 	event void Flash.readDone(error_t result)
 	{
+		if(isSerial)
+		{
 		sendChunkMessage(sendArray);
+		}
 	}
 
 	event void Flash.eraseDone(error_t result)

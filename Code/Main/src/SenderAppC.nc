@@ -10,6 +10,8 @@ module SenderAppC{
 		interface Leds;
 		
 		interface RadioTransfereSenderI as Radio; 
+		
+		interface Compression as comp;
 	}
 	
 }
@@ -18,16 +20,24 @@ implementation{
 	uint8_t normal[1024]; 
 	uint8_t compressed[2000];  
 	
-	uint8_t blockCount = 0; 
+	uint16_t blockCount = 0; 
 	bool isSending = FALSE; 
 	
+	void SetDummyData()
+	{
+		uint16_t i;
+		for(i =0; i<sizeof(normal); i++)
+		{
+			normal[i] = (uint8_t)(i % 256);
+		}
+	}
 	
 	void RequestSend()
 	{
 		if(blockCount<=64)
 		{
 			blockCount++; 
-			call Flash.GetData(normal, (blockCount-1)*16, 16); 
+			call Flash.GetData(normal, (blockCount-1)*16, 16);
 		}
 		else
 		{
@@ -47,11 +57,12 @@ implementation{
 	}
 	
 	event void Flash.SetDone(){
-		// TODO Auto-generated method stub
+		RequestSend();
 	}
 
 	event void Flash.GetDone(uint8_t *ptr, uint16_t length){
-		call Radio.Send(normal, length);
+		//uint16_t size = call comp.Compress(ptr, compressed);
+		call Radio.Send(ptr, length);
 	}
 
 	event void Notify.notify(button_state_t state){
@@ -68,7 +79,10 @@ implementation{
 	
 
 	event void Radio.SendDone(){
-		call Leds.led1Toggle();
 		RequestSend();
+	}
+
+	event void Flash.eraseDone(){
+		StartSend();
 	}
 }
