@@ -29,9 +29,9 @@ for l = 1:length(K)
     Tn = Tj + ones(length(Tj),1)*abs(min(Tj));
     dT = Tn(length(Tn))-Tn(1);
    
-    sums(l,2) = dT;
+    sums(l,(i-1)*2+2) = s;
     
-    sums(l,1) = s*dT;
+    sums(l,(i-1)*2+1) = s*dT;
     res(l,i) = s*dT;
 end
 
