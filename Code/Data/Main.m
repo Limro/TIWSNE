@@ -10,7 +10,8 @@ for l = 1:length(K)
     data = T(K{l,2}:K{l,3},2);
        
     
-    data = ((2.7-data).^2)./10;
+    %data = ((2.7-data)./10).^2 ;
+    data = (2.7-data).*(data./10);
     data = filter(ones(1,100)*(1/100),1,data);
     
     O = csvread(R{l,1},2,0);
