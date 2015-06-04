@@ -1,5 +1,7 @@
 %!TEX root = Main.tex
 \section{Theory}
+This section will contain a brief overview of the compression techniques used. It will also contain information on the TelosB mote platform.
+
 
 \subsection{Image}
 We use the $256 \times 256$ pixel grayscale cameraman image (Figure \ref{fig:image_cameraman}). 
@@ -16,8 +18,7 @@ The image is saved in the TelosB flash as a binary file. Each pixel is represent
 Energy consumption is important when we look at wireless sensor networks. 
 The component with the most energy consumption of the TelosB is the radio circuitry as seen in the TelosB datasheet\cite{dataSheet}. 
 The challenge is to choose when to use the radio and how often. 
-When comparing the radio current (23 mA) with the processing current (1.8 mA), it is clear that it is better to process data before sending it. 
-Processing data in order to reduce package size or transmission rate is the basis principle of this mini project. 
+Comparing the radio current (23 mA) with the processing current (1.8 mA), it is indicating that a lot of processing is possible, before the power consumption gets larger than the cost of sending. 
 
 \subsection{Compression}
 
