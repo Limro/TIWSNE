@@ -12,12 +12,14 @@ This section contains the description of the tests done as part of the mini proj
 The purpose is to validate the compression and decompression method of each compression algorithm.
 
 \textbf{Test equipment}
+
 \begin{itemize}
 \item PC 
 \item TelosB mote
 \end{itemize}
 
 \textbf{Procedure}
+\vspace{-15pt}
 \begin{enumerate}
 \item Connect the TelosB mote to the PC.
 \item Load a compression module on the mote.
@@ -28,6 +30,7 @@ The purpose is to validate the compression and decompression method of each comp
 \end{enumerate}
 
 \subsubsection{Full System Test}
+\label{subs:FST}
 \textbf{Purpose}\\
 The purpose is to validate the full system functionality.
 
@@ -37,8 +40,12 @@ The purpose is to validate the full system functionality.
 \item Receiver TelosB mote
 \item Sender TelosB mote
 \end{itemize}
+The compressed images can be seen on figure \ref{fig:cameramanresult}. 
+To ensure that the compression-send-decompress procedure was successful it is compared with the same image compressed and decompressed in Matlab. 
+By comparing this two images it is shown that the functionality is as expected. 
 
 \textbf{Procedure}
+\vspace{-15pt}
 \begin{enumerate}
 \item Connect the Sender TelosB mote to the PC.
 \item Load the image onto the sender TelosB using the command: \texttt{Java TestSerial -w}.
@@ -48,6 +55,7 @@ The purpose is to validate the full system functionality.
 \item Observe the reconstructed image on the PC.
 \end{enumerate}
 
+Looking at the voltage over the shunt, we can see how the system uses power, for the test setup a typical power over time is illustrated in Figure \ref{fig:ImageTransfere}.
 
 \subsection{Energy Test}
 \textbf{Purpose} \\
@@ -61,8 +69,10 @@ The purpose is to validate the energy consumption of the full system functionali
 \item Oscilloscope
 \item 10 Ohm shunt resistor board
 \end{itemize}
+For each compression algorithm 3 measurements was done on both sender and receiver. The measurements can be seen in the table \ref{tab:MeasurementResults}.
 
 \textbf{Procedure}
+\vspace{-15pt}
 \begin{enumerate}
 \item Choose a compression module on the two TelosB motes.
 \item Connect the Sender TelosB mote to the PC.
@@ -76,6 +86,61 @@ The purpose is to validate the energy consumption of the full system functionali
 
 \section{Results}
 This section contains the results of the tests done during the mini project.
-\subsection{Functionality test}
 
-\subsection{Energy Test}
+Before the energy measurements are made, the functionality was validated. Using the test setup in section \ref{subs:FST}, an image was written to the flash, and then compressed and sent. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth] {cameramanresult}
+	\caption{Compression Results}
+	\label{fig:cameramanresult}
+\end{figure}
+
+The compressed images can be seen on figure \ref{fig:cameramanresult}. To ensure that the compression-send-decompress procedure was successful it is compared with the same image compressed and decompressed in Matlab. By comparing this two images it is shown that the functionality is as expected. 
+
+
+Looking at the voltage over the shunt, we can see how the system uses power, for the test setup a typical power over time is illustrated in figure \ref{fig:ImageTransfere}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth ]{ImageTransfere}
+	\caption{ Shut voltage during image transfer. }
+	\label{fig:ImageTransfere}
+\end{figure}
+
+For each compression algorithm 3 measurements was done on both sender and receiver. 
+The measurements can be seen in the table \ref{tab:MeasurementResults}.
+
+
+\begin{table}[h]
+	\begin{tabular}{cllllll}
+
+	\cline{2-5} 
+	\multicolumn{1}{l}{} 	& \multicolumn{2}{l}{Energy {[$J$]}} & \multicolumn{2}{l}{Mean Power [$W$]} &	&	\\ \hline
+	\rowcolor{gr}
+	\multicolumn{1}{l}{Bit Removed}	& Sender	& Receiver	& Sender	& Receiver	& \multicolumn{1}{l}{Transfer Time [$S$]} & \multicolumn{1}{l}{Better Power Than None} \\ \hline
+	% \rowcolor{gr}
+	\multicolumn{1}{c}{\multirow{3}{*}{None}} & 0,988	& 1,131	& 0,043	& 0,049	& \multicolumn{1}{l}{23,0}	& \multicolumn{1}{l}{0\%}	\\  
+	\multicolumn{1}{c}{}	& 0,990	& 1,133	& 0,043	& 0,049	& \multicolumn{1}{l}{23,0}	& \multicolumn{1}{l}{0\%}	\\ 
+	% \rowcolor{gr} 
+	\multicolumn{1}{c}{}	& 0,985	& 1,130	& 0,043	& 0,049	& \multicolumn{1}{l}{23,0}	& \multicolumn{1}{l}{0\%}	\\ \hline
+	% \rowcolor{gr} 
+	\multicolumn{1}{c}{\multirow{3}{*}{One}}  & 0,879	& 1,047	& 0,042	& 0,049	& \multicolumn{1}{l}{21,2}	& \multicolumn{1}{l}{8\%}	\\ %\cline{2-7} 
+	\multicolumn{1}{c}{}	& 0,879	& 1,047	& 0,042	& 0,049	& \multicolumn{1}{l}{21,2}	& \multicolumn{1}{l}{8\%}	\\ %\cline{2-7} 
+	% \rowcolor{gr} 
+	\multicolumn{1}{c}{}	& 0,879	& 1,046	& 0,042	& 0,049	& \multicolumn{1}{l}{21,2}	& \multicolumn{1}{l}{8\%}	\\ \hline
+	% \rowcolor{gr} 
+	\multicolumn{1}{c}{\multirow{3}{*}{Two}}  & 0,799	& 0,964	& 0,041	& 0,050	& \multicolumn{1}{l}{19,5}	& \multicolumn{1}{l}{15\%}	\\ %\cline{2-7} 
+	\multicolumn{1}{c}{}	& 0,800	& 0,966	& 0,041	& 0,050	& \multicolumn{1}{l}{19,5}	& \multicolumn{1}{l}{15\%}	\\ %\cline{2-7} 
+	% \rowcolor{gr}
+	\multicolumn{1}{c}{}	& 0,800	& 0,965	& 0,041	& 0,050	& \multicolumn{1}{l}{19,5}	& \multicolumn{1}{l}{15\%}	\\ \hline
+	% \rowcolor{gr}
+	\multicolumn{1}{c}{\multirow{3}{*}{Four}} & 0,591	& 0,744	& 0,040	& 0,050	& \multicolumn{1}{l}{14,9}	& \multicolumn{1}{l}{35\%}	\\ %\cline{2-7} 
+	\multicolumn{1}{c}{}	& 0,591 & 0,743	& 0,040	& 0,050	& \multicolumn{1}{l}{14,9}	& \multicolumn{1}{l}{35\%}	\\ %\cline{2-7} 
+	% \rowcolor{gr}
+	\multicolumn{1}{c}{}	& 0,600 & 0,742	& 0,041	& 0,050	& \multicolumn{1}{l}{14,9}	& \multicolumn{1}{l}{35\%}	\\ \hline
+	\end{tabular}
+
+	\caption{Measurement Results }
+	\label{tab:MeasurementResults}
+\end{table}
