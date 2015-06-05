@@ -1,22 +1,20 @@
 #include <UserButton.h>
 #include "printf.h"
 
-module SenderAppC{
+module SenderAppC
+{
 	uses
 	{
 		interface FlashManager as Flash; 
 		interface Notify<button_state_t> as Notify; 
 		interface Boot;
 		interface Leds;
-		
 		interface RadioTransfereSenderI as Radio; 
-		
 		interface Compression as comp;
 	}
-	
 }
-implementation{
-	
+implementation
+{
 	uint8_t normal[1024]; 
 	uint8_t compressed[2000];  
 	
@@ -56,33 +54,38 @@ implementation{
 		}
 	}
 	
-	event void Flash.SetDone(){
+	event void Flash.SetDone()
+	{
 		RequestSend();
 	}
 
-	event void Flash.GetDone(uint8_t *ptr, uint16_t length){
+	event void Flash.GetDone(uint8_t *ptr, uint16_t length)
+	{
 		//uint16_t size = call comp.Compress(ptr, compressed);
 		call Radio.Send(ptr, length);
 	}
 
-	event void Notify.notify(button_state_t state){
+	event void Notify.notify(button_state_t state)
+	{
 		if ( state == BUTTON_PRESSED)
 		{
 			call Flash.GetData(normal, 0, 16);
 		}
 	}
 
-	event void Boot.booted(){
+	event void Boot.booted()
+	{
 		call Leds.led2Off();
 		StartSend();
 	}
 	
-
-	event void Radio.SendDone(){
+	event void Radio.SendDone()
+	{
 		RequestSend();
 	}
 
-	event void Flash.eraseDone(){
+	event void Flash.eraseDone()
+	{
 		StartSend();
 	}
 }

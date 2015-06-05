@@ -17,15 +17,16 @@ implementation {
 	components LedsC;
 	
 	components RadioReciverC as Reciver;
-  	components new AMReceiverC(6);
-  	components ActiveMessageC;
-  	
-  	components FourBitCompression as comp; 
-  	
-  	
-  	Reciver.AMControl -> ActiveMessageC;
-  	Reciver.Packet ->AMReceiverC;
-  	Reciver.Receive ->AMReceiverC;
+	components new AMReceiverC(6);
+	components ActiveMessageC;
+	
+	components FourBitCompression as comp; 
+	//components TwoBitCompression as comp; 
+	//components OneBitCompression as comp; 	
+	
+	Reciver.AMControl -> ActiveMessageC;
+	Reciver.Packet -> AMReceiverC;
+	Reciver.Receive -> AMReceiverC;
 
 	Serial.Boot -> MainC.Boot;
 	Serial.Control -> AM;
@@ -40,13 +41,11 @@ implementation {
 	FlashC.BlockRead -> BlockStorageC.BlockRead;
 	FlashC.BlockWrite -> BlockStorageC.BlockWrite;
 	
-	FlashManagerC.Flash ->FlashC2;
+	FlashManagerC.Flash -> FlashC2;
 	
 	ReciverAppC.comp -> comp;
-	ReciverAppC.Flash ->FlashManagerC;
+	ReciverAppC.Flash -> FlashManagerC;
 	ReciverAppC.Leds -> LedsC;
 	ReciverAppC.Boot -> MainC;
 	ReciverAppC.Radio -> Reciver;
 }
-
-

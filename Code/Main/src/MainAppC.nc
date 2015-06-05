@@ -5,7 +5,8 @@
 #include "StorageVolumes.h"
 
 configuration MainAppC {}
-implementation {
+implementation 
+{
 	components TestSerialC as Serial, MainC;
 	components SerialActiveMessageC as AM;
 	components FlashC;
@@ -17,15 +18,16 @@ implementation {
 	components LedsC;
 	
 	components RadioSenderC as Sender;
-  	components new AMSenderC(6);
-  	components ActiveMessageC;
-  	
-  	components FourBitCompression as comp; 
-  	
-  	
-  	Sender.AMSend -> AMSenderC;
-  	Sender.AMControl -> ActiveMessageC;
-  	Sender.Packet -> AMSenderC;
+	components new AMSenderC(6);
+	components ActiveMessageC;
+	
+	components FourBitCompression as comp; 
+	//components TwoBitCompression as comp; 
+	//components OneBitCompression as comp; 
+
+	Sender.AMSend -> AMSenderC;
+	Sender.AMControl -> ActiveMessageC;
+	Sender.Packet -> AMSenderC;
 
 	Serial.Boot -> MainC.Boot;
 	Serial.Control -> AM;
@@ -40,7 +42,7 @@ implementation {
 	FlashC.BlockRead -> BlockStorageC.BlockRead;
 	FlashC.BlockWrite -> BlockStorageC.BlockWrite;
 	
-	FlashManagerC.Flash ->Flash2;
+	FlashManagerC.Flash -> Flash2;
 	
 	SenderAppC.comp -> comp;
 	SenderAppC.Flash ->FlashManagerC;
@@ -49,5 +51,3 @@ implementation {
 	SenderAppC.Boot -> MainC;
 	SenderAppC.Radio -> Sender;
 }
-
-

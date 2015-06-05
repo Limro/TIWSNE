@@ -87,5 +87,4 @@ implementation{
 		isWorking = TRUE;
 		call Flash.erase();
 	}
-	
 }
