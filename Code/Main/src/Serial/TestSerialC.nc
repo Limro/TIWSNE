@@ -3,8 +3,10 @@
 #include "Flash.h"
 #include <UserButton.h>
 
-module TestSerialC {
-	uses {
+module TestSerialC 
+{
+	uses 
+	{
 		interface SplitControl as Control;
 		interface Boot;
 	
@@ -18,8 +20,8 @@ module TestSerialC {
 		interface Flash;
 	}
 }
-implementation {
-
+implementation 
+{
 	message_t packet;
 	message_t chunk_pkt;
 	message_t status_pkt;
@@ -29,14 +31,15 @@ implementation {
  
 	int sendIndex = 0;
 	char sendArray[64];
-	
+
 	bool isSerial = FALSE;
-  
-	event void Boot.booted() {
+
+	event void Boot.booted() 
+	{
 		call Control.start();
 	}
 	
-	void sendStatusMessage( uint8_t status )
+	void sendStatusMessage(uint8_t status)
 	{
 		status_msg_t* statusMsg = (status_msg_t*) call Packet.getPayload(&status_pkt, sizeof(status_msg_t));
 		statusMsg->status = status;
@@ -60,18 +63,14 @@ implementation {
 		call PacketAck.noAck(&chunk_pkt);
 	
 		if (call SendData.send(AM_BROADCAST_ADDR, &chunk_pkt, sizeof(chunk_msg_t)) == SUCCESS)
-		{
 			// Do nothing	
-		}
 	}
 	
-	event message_t* ReceiveStatus.receive(message_t* bufPtr, 
-			void* payload, uint8_t len) 
+	event message_t* ReceiveStatus.receive(message_t* bufPtr, void* payload, uint8_t len) 
 	{
 		if (len != sizeof(status_msg_t)) 
-		{
 			return bufPtr;
-		}
+
 		else
 		{
 			status_msg_t* statusMsg = (status_msg_t*)payload;
@@ -99,7 +98,6 @@ implementation {
 			}
 			else if(statusMsg->status == TRANSFER_READY)
 			{
-	
 			}
 			else if(statusMsg->status == TRANSFER_FROM_TELOS)
 			{
@@ -116,16 +114,16 @@ implementation {
 		}
 	}
 
-	event void SendStatus.sendDone(message_t* bufPtr, error_t error) {
+	event void SendStatus.sendDone(message_t* bufPtr, error_t error) 
+	{
 			// TODO
 	}
 
-	event message_t* ReceiveData.receive(message_t* bufPtr, 
-				void* payload, uint8_t len) {
+	event message_t* ReceiveData.receive(message_t* bufPtr, void* payload, uint8_t len) 
+	{
 		if (len != sizeof(chunk_msg_t)) 
-		{
 			return bufPtr;
-		}
+	
 		else
 		{
 			chunk_msg_t* data = (chunk_msg_t*)payload;
@@ -137,49 +135,42 @@ implementation {
 		}
 	}
 
-	event void SendData.sendDone(message_t* bufPtr, error_t error) {
-			if (&chunk_pkt == bufPtr)
+	event void SendData.sendDone(message_t* bufPtr, error_t error) 
+	{
+		if (&chunk_pkt == bufPtr)
 		{
 			sendIndex++;
 	
 			if(sendIndex < maxChunks)
-			{
 				call Flash.read(sendArray, sendIndex);
-			}
+		
 			else
 			{
 				isSerial = FALSE;
 				sendStatusMessage(TRANSFER_DONE);
 			}
 		}
-	
 	}
 
 	event void Control.startDone(error_t err) {}
-		event void Control.stopDone(error_t err) {}
+	event void Control.stopDone(error_t err) {}
 	
 	// Flash Events
 
-	event void Flash.writeDone(error_t result){
+	event void Flash.writeDone(error_t result)
+	{
 		if(isSerial)
-		{
 			sendStatusMessage(TRANSFER_OK);
-			}
 	}
 
 	event void Flash.readDone(error_t result)
 	{
 		if(isSerial)
-		{
-		sendChunkMessage(sendArray);
-		}
+			sendChunkMessage(sendArray);	
 	}
 
 	event void Flash.eraseDone(error_t result)
 	{
 		sendStatusMessage(TRANSFER_READY);
 	}
-
 }
-
-

@@ -1,7 +1,8 @@
 #include <UserButton.h>
 #include "printf.h"
 
-module ReciverAppC{
+module ReciverAppC
+{
 	uses
 	{
 		interface FlashManager as Flash; 
@@ -11,35 +12,33 @@ module ReciverAppC{
 		interface RadioTransfereReciverI as Radio; 
 		interface Compression as comp; 
 	}
-	
 }
-implementation{
-	
+implementation
+{
 	uint8_t normal[1024]; 
 	uint8_t compressed[1024];  
-	
 	uint16_t blockCount = 0; 
 	
-	
-	
-	event void Flash.SetDone(){
-		
+	event void Flash.SetDone()
+	{
 	}
 
-	event void Flash.GetDone(uint8_t *ptr, uint16_t length){
-		
+	event void Flash.GetDone(uint8_t *ptr, uint16_t length)
+	{	
 	}
 
-	event void Boot.booted(){
+	event void Boot.booted()
+	{
 		call Flash.erase();
 	}
-	
 
-	event uint8_t * Radio.GetBuffer(uint16_t length){
+	event uint8_t * Radio.GetBuffer(uint16_t length)
+	{
 		return normal; 
 	}
 
-	event void Radio.PacketRecived(uint16_t length, error_t error){
+	event void Radio.PacketRecived(uint16_t length, error_t error)
+	{
 		if(error == SUCCESS)
 		{
 			int i; 	
@@ -59,7 +58,8 @@ implementation{
 		}
 	}
 
-	event void Flash.eraseDone(){
+	event void Flash.eraseDone()
+	{
 		call Radio.Start(); 
 	}
 }
