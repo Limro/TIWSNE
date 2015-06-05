@@ -22,6 +22,19 @@ The Serial Communication block of the TelosB motes communicates with the PC's Se
 The Radio Communication block communicates with the other TelosB mote as descriped in section \ref{sec:Radio-Block}. \\
 The Compression block does the compression and decompression of the image as descriped in section \ref{sec:Compression-block}.
 
+The flow of the image for the sender mote is as shown in figure \ref{fig:sendermain}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth]{sendermain}
+	\caption{Sender Mote Program Flow}
+	\label{fig:sendermain}
+\end{figure}
+
+It is shown how the image is loaded in the flash from the pc, and is stored there before transfer. When transferring, the image is loaded up from flash in blocks of 1024 bytes. Each block is then compressed and send, before the next block is loaded. This is repeated 64 times for the whole image.
+
+The receiver works in much the same way. It receives the packets of a <1024 message, and restore the <1024 bytes message. After this process, it is decompressed to the 1024 bytes and written to the flash. When all 64 messages is received the image can be read out from the flash, by the pc. This is also done in chunks of 64 bytes. 
+
 \subsection{Serial Communication}
 \label{sec:Serial-Communication}
 The serial communication is responsible for transfering the image to and from the TelosB mote. A header file is available to both the PC software and the TelosB program. It contains a series of defines that are used for the communication messages. The defines can be found in Table \ref{definetable}.
