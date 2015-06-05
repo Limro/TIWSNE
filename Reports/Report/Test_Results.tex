@@ -1,94 +1,30 @@
 %!TEX root = Main.tex
 \section{Tests}
-This section contains the description of the tests done as part of the mini project.
+This section contains descriptions of the tests done as part of the mini project.
 
-\subsection{Functionality test}
+\subsection{Compression}
+The algorithms were first designed and implemented in C and tested on a PC since debugging is easier on the PC.
+Afterwards the code was implemented in nesC and tested on the TelosB.
+The purpose of this integration test was to validate that the algorithms worked correctly on the TelosB before we ran the full system test.
 
-\fxnote{Tests should contain an "expected result" section.}
-
-\subsubsection{Compression}
-
-\textbf{Purpose}\\
-The purpose is to validate the compression and decompression method of each compression algorithm.
-
-\textbf{Test equipment}
-
-\begin{itemize}
-\item PC 
-\item TelosB mote
-\end{itemize}
-
-\textbf{Procedure}
-\vspace{-15pt}
-\begin{enumerate}
-\item Connect the TelosB mote to the PC.
-\item Load a compression module on the mote.
-\item Open a terminal and connect the output from the mote to the terminal with the command \texttt{java net.tinyos.tools.PrintfClient -comm serial@/dev/ttyUSB0:telos}
-\item Press the RESET button on the mote.
-\item Observe data in the terminal.
-\item Repeat step 2 to 5 for every compression module.
-\end{enumerate}
-
-\subsubsection{Full System Test}
+\subsection{Full System Test}
 \label{subs:FST}
-\textbf{Purpose}\\
-The purpose is to validate the full system functionality.
 
-\textbf{Test equipment}
-\begin{itemize}
-\item PC with TestSerial Java software
-\item Receiver TelosB mote
-\item Sender TelosB mote
-\end{itemize}
-The compressed images can be seen on figure \ref{fig:cameramanresult}. 
-To ensure that the compression-send-decompress procedure was successful it is compared with the same image compressed and decompressed in Matlab. 
-By comparing this two images it is shown that the functionality is as expected. 
+The purpose of this test was to validate the compression -> sending -> decompression procedure before measurements are done.
+The image was sent between the TelosB motes once for each compression algorithm.
+The image was then transferred to a computer and compared with a correctly compressed and decompressed image.
 
-\textbf{Procedure}
-\vspace{-15pt}
-\begin{enumerate}
-\item Connect the Sender TelosB mote to the PC.
-\item Load the image onto the sender TelosB using the command: \texttt{Java TestSerial -w}.
-\item When the transfer to the Sender TelosB mote is complete, reset the mote. 
-\item When the transmission is complete, connect the Receiver TelosB mote to the PC and execute the terminal command: \texttt{Java TestSerial -r}. \\
-(LED2 on the Receiver mote will light up when the wireless transmission is completed.)
-\item Observe the reconstructed image on the PC.
-\end{enumerate}
+\subsection{Energy Measurements}
+For each compression algorithm 3 measurements were done on both sender and receiver. The measured data 
+can be seen in the table \ref{tab:MeasurementResults}.
 
-Looking at the voltage over the shunt, we can see how the system uses power, for the test setup a typical power over time is illustrated in Figure \ref{fig:ImageTransfere}.
-
-\subsection{Energy Test}
-\textbf{Purpose} \\
-The purpose is to validate the energy consumption of the full system functionality.
-
-\textbf{Test equipment}
-\begin{itemize}
-\item PC with TestSerial Java software
-\item Receiver TelosB mote
-\item Sender TelosB mote
-\item Oscilloscope
-\item 10 Ohm shunt resistor board
-\end{itemize}
-For each compression algorithm 3 measurements was done on both sender and receiver. The measurements can be seen in the table \ref{tab:MeasurementResults}. The test setup can be seen in figure \ref{fig:EnergyTestSetup}.
+The measurements were done using an oscilloscope.  The test setup can be seen in figure \ref{fig:EnergyTestSetup}.
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=1] {TestSetup}
 	\caption{Energy Test Setup}
 	\label{fig:EnergyTestSetup}
 \end{figure}
-
-\textbf{Procedure}
-\vspace{-15pt}
-\begin{enumerate}
-\item Choose a compression module on the two TelosB motes.
-\item Connect the Sender TelosB mote to the PC.
-\item Load the image onto the sender TelosB using the terminal command: \texttt{Java TestSerial -w}.
-\item When the transfer to the Sender TelosB mote is complete, set the oscilloscope to single mode and reset the mote.
-\item When the wireless transmission is complete, observe and save the reading from the oscilloscope. \\
-(LED2 on the Receiver mote will light up when the wireless transmission is completed.)
-\item Connect the Receiver TelosB mote to the PC and execute the terminal command: \texttt{Java TestSerial -r}.
-\item Observe the reconstructed image on the PC.
-\end{enumerate}
 
 \section{Results}
 This section contains the results of the tests done during the mini project.
