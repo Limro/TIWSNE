@@ -6,25 +6,29 @@ This section contains descriptions of the tests done as part of the mini project
 The algorithms were first designed and implemented in C and tested on a PC since debugging is easier on the PC.
 Afterwards the code was implemented in nesC and tested on the TelosB.
 The purpose of this integration test was to validate that the algorithms worked correctly on the TelosB before we ran the full system test.
+This was done by letting the TelosB compress, and decompress the image in flash on boot.
+After transferring an image to the flash, and then rebooting, the compressed image can be read out of the flash. By using MATLAB it was then possible to verify that the algorithm preformed as expected.
 
 \subsection{Full System Test}
 \label{subs:FST}
 
 The purpose of this test was to validate the compression -> sending -> decompression procedure before measurements are done.
 The image was sent between the TelosB motes once for each compression algorithm.
-The image was then transferred to a computer and compared with a correctly compressed and decompressed image.
+The image was then transferred to a computer and compared with a correctly compressed and decompressed image in MATLAB.
 
 \subsection{Energy Measurements}
-For each compression algorithm 3 measurements were done on both sender and receiver. The measured data 
-can be seen in the table \ref{tab:MeasurementResults}.
+To measure the energy used by the TelosBs, the test setup in figure \ref{fig:EnergyTestSetup} was used. 
 
-The measurements were done using an oscilloscope.  The test setup can be seen in figure \ref{fig:EnergyTestSetup}.
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=1] {TestSetup}
 	\caption{Energy Test Setup}
 	\label{fig:EnergyTestSetup}
 \end{figure}
+
+Using a oscilloscope the voltage over the 10 ohm shunt is measured on both sender and receiver.The battery voltage is also measured for both motes. For each compression algorithm 3 measurements were done on both sender and receiver. The measured data can be seen in the table \ref{tab:MeasurementResults}. If a packet error was observed during the measurements,  this measurement discarded. This is done to make the measurements more comparable.
+
+
 
 \section{Results}
 This section contains the results of the tests done during the mini project.
