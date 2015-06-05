@@ -72,7 +72,7 @@ The TelosB software is based on the "BlockStorage" and "TestSerial" examples.
 
 \subsection{Radio Communication}\label{sec:Radio-Block}
 
-For transfering data between motes, the TelosB radio framework is used. 
+For transferring data between motes, the TelosB radio framework is used. 
 Since the existing TelosB modules are optimized for wireless sensor networks, the standard radio module uses a fixed packet size. 
 This is done since the normal application of a wireless sensor is sending a fixed-size measurement. 
 Furthermore the packet size is relatively small, since a single measurement often generates a small amount of data. 
@@ -91,7 +91,7 @@ To fit the data to the fixed-size architecture, the data is split into smaller p
 Rather than dynamically changing the packet size to fit the data, the packet size is kept constant at  50 bytes, and information about how much data is valid in the packet is added. 
 Since there sometimes are send a packet with some invalid data, there is introduced some overhead in the radio communication. 
 This is illustrated in Figure \ref{fig:RadioPacketCut}. 
-This is not desirable for a real wireless sensor network, but is negligible in our project since the relative amount of invalid data to valid data, is very small. \fxnote{Is this correct?}
+This is not desirable for a real wireless sensor network, but is negligible in our project since the relative amount of invalid data to valid data, is very small.
 
 When chopping the file into smaller pieces, it is important to be able to reconstruct the image on the receiver side, and detect if a packet is lost. 
 In order to accomplish this a packet counter that increments for each packet is added to the packet. 
@@ -114,7 +114,7 @@ After the first packet is received, the receiver asks for a buffer to store the 
 When a packet is received a message received event is called. 
 This event is also called with a error message in case of a packet is received out of order, and the reception is terminated. 
 
-As seen on the figure, there is no acknowledgement or retransmission. 
+As seen on the figure, there is no acknowledgment or retransmission. 
 For a practical application this features would be necessary and important to ensure reliability.
 In this project predictability is more important than reliability, this is to ensure that packet loss and retransmission does not add unnecessary energy usage which reduces determinism.
 
@@ -136,14 +136,15 @@ The \texttt{Compress} method will take a block of uncompressed data as an array 
 The \texttt{Decompress} method takes the compressed data in the \texttt{in} parameter and writes the decompressed data in the array given in the \texttt{out} parameter.
 The decompressed data will always be an array with 1024 bytes.
 
-\fxnote{Are the descriptions of the algorithms in the following sub sections necessary? I think the figures are enough.}
 
-\subsubsection{One Bit Compression}
-The One Bit Compressions \texttt{Compress} method will split the input data up in chunks of 8 bytes at a time, and for each byte AND \texttt{0xFE} onto it (resulting in the last bit being 0, and leave the rest untouched), and OR one bit from the last byte unto its own last bit.
+
+\subsubsection{N-Bit Compression}
+
+The N-Bit Compressions' \texttt{Compress} method will split the input data up in chunks of 8, 4 and 2 bytes at a time, and for each byte AND the last bits away (\texttt{0xFE}, \texttt{0xFC}, \texttt{0xF0}) onto it (resulting in the last bits being 0, and leave the rest untouched), and OR N bits from the last byte unto its own last bit.
 Then the modified bytes will be added to the output parameter.
-This will be done for all 128 chunks of bytes (8 bytes pr. chunk).
+This will be done for all chunks of bytes.
 Lastly it will return the size of the output parameter.
-This can be seen on Figure \ref{fig:1BitCompressingAlgo}.
+This can be seen on Figure \ref{fig:1BitCompressingAlgo}, \ref{fig:2BitCompressingAlgo} and \ref{fig:4BitCompressingAlgo}.
 
 \begin{figure}[htbp]
     \centering
@@ -189,18 +190,7 @@ This can be seen on Figure \ref{fig:1BitCompressingAlgo}.
     \label{fig:1BitCompressingAlgo}
 \end{figure}
 
-The One Bit Compression's \texttt{Decompress} is the inverse operation of the \texttt{Compress} method.
-For each chunk of seven bytes it will, for each byte, AND \texttt{0xFE} and store them in the output parameter. 
-Then it will look at the last bit for the seven (unmodified) input bytes and shift each of them into a new byte, and store it after the seven modified bytes in the output parameter.
 
-
-
-
-
-\subsubsection{Two Bit Compression}
-The Two Bit Compression's \texttt{Compress} method is similar to the One Bit Compression's \texttt{Compress}.
-The difference is, it will split the input data up in chunks of 4 bytes at a time, and for each byte AND \texttt{0xFC} onto it (resulting in the last two bits being 0, and leave the rest untouched), and OR two bits from the last byte unto its own last two bits.
-This can be seen on Figure \ref{fig:2BitCompressingAlgo}.
 
 \begin{figure}[htbp]
     \centering
@@ -236,19 +226,6 @@ This can be seen on Figure \ref{fig:2BitCompressingAlgo}.
     \label{fig:2BitCompressingAlgo}
 \end{figure}
 
-Like \texttt{Compress} method is similar, so is the \texttt{Decompress} method. 
-For each chunk of 3 bytes it will, for each byte, AND \texttt{0xFC} and store them in the output parameter. 
-Then it will look at the last two bits for the three (unmodified) input bytes and shift each of them into a new byte, and store it after the three modified bytes in the output parameter.
-
-
-
-
-\subsubsection{Four Bit Compression}
-
-The Four Bit Compression's \texttt{Compress} method than both the One- and Two Bit Compression's \texttt{Compress}.
-The difference is, it will split the input data up in chunks of 2 bytes at a time,  AND \texttt{0xF0} onto it (resulting in the last four bits being 0, and leave the rest untouched), and OR the first four  bits from the second byte unto the first byte's own last four bits.
-This can be seen on Figure \ref{fig:4BitCompressingAlgo}.
-
 
 \begin{figure}[htbp]
     \centering
@@ -278,5 +255,7 @@ This can be seen on Figure \ref{fig:4BitCompressingAlgo}.
     \label{fig:4BitCompressingAlgo}
 \end{figure}
 
-The \texttt{Decompress} method will AND \texttt{0xF0} on each byte and store them in the output parameter. 
-Then it will shift at the last four bits of the unmodified input byte into a new byte, and store it after the previous modified byte in the output parameter.
+\FloatBarrier
+The N-Bit Compressions' \texttt{Decompress} is the inverse operation of the \texttt{Compress} method.
+For each chunk of bytes it will, for each byte, AND zeros unto the last bits (\texttt{0xFE}, \texttt{0xFC}, \texttt{0xF0}) and store them in the output parameter. 
+Then it will look at the last bit(s) for the unmodified input bytes and shift each of them into a new byte, and store it after the modified bytes in the output parameter.

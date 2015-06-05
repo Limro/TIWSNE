@@ -1,12 +1,31 @@
 %!TEX root = Main.tex
 \section{Discussion}
-When we look at the full system test we see that the implementation fulfils the basic requirements of transmitting a compressed image to a sink (the receiver) where the sink reconstructs the image. The sender mote is also able to compress the image in multiple different ways. This is seen in figure \ref{fig:cameramanresult}. Visual focus is needed in order to differentiate between the original image, the 1-bit and the 2-bit compressed image while the 4-bit image is clearly different.
+When we look at the full system test we see that the implementation fulfills the basic requirements of transmitting a compressed image to a sink (the receiver) where the sink reconstructs the image. 
+The sender mote is also able to compress the image in multiple different ways. 
+This is seen in figure \ref{fig:cameramanresult}. Visual focus is needed in order to differentiate between the original image, the 1-bit and the 2-bit compressed image while the 4-bit image is clearly different.
 
-The compression algorithms used in the mini project might not relate very well to the real world. They are a lot faster than  JPEG for example, but not very effective at retaining image quality.
+The compression algorithms used in the mini project might not relate very well to the real world. 
+They are a lot faster than  JPEG for example, but not very effective at retaining image quality.
 
-When observing the energy measurements result (table \ref{tab:MeasurementResults}) it is clear that the power use is near constant and the transfer time is the variant. This confirms that the compression algorithms are cheap in power usage. When using the 4-bit compression the transfer time is reduced from 23 seconds to 14,9 seconds. This corresponds to a 35\% improvement in energy usage. It is also relevant to note that the time is the whole time for both compression and transmit. This means that not only does the application use less energy, it also preforms the task faster. This is due to the time it takes to calculate one bit is very short compared to the time it takes to send one bit. 
+When observing the energy measurements result (table \ref{tab:MeasurementResults}) it is clear that the power use is near constant and the transfer time is the variant. 
+This confirms that the compression algorithms are cheap in power usage. 
+When using the 4-bit compression the transfer time is reduced from 23 seconds to 14,9 seconds. 
+This corresponds to a 35\% improvement in energy usage. 
+It is also relevant to note that the time is the whole time for both compression and transmit. 
+This means that not only does the application use less energy, it also preforms the task faster. 
+This is due to the time it takes to calculate one bit is very short compared to the time it takes to send one bit. 
 
-For future projects it would be interesting to implement more computation heavy algorithms like JPEG in order to re-evaluate whether the power usage will be significantly higher. Especially for algorithms that need to relay heavily on writing to the flash. Event though the radio is the biggest power consumer the flash write operation also uses a significantly amount of power. 
+For future projects it would be interesting to implement more computation heavy algorithms like JPEG in order to re-evaluate whether the power usage will be significantly higher. 
+Especially for algorithms that need to relay heavily on writing to the flash. 
+Event though the radio is the biggest power consumer the flash write operation also uses a significantly amount of power. 
+
+
+
+
 
 \section{Conclusion}
-A system with the ability to compress an image and send it between two TelosB motes has been implemented successfully. The energy consumption of the system has been measured using multiple different compression algorithms. Observing the measurement data, it is clear that energy is saved by compressing the image before sending it. 
+
+A system with the ability to compress an image and send it between two TelosB motes has been implemented successfully. 
+Furthermore the image can be reconstructed and viewed on a computer.
+The energy consumption of the system has been measured using multiple different compression algorithms. 
+Observing the measurement data, it is clear that energy is saved by compressing the image before sending it. 

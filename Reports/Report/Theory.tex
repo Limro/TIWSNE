@@ -4,7 +4,7 @@ This section will contain a brief overview of the compression techniques used. I
 
 
 \subsection{Image}
-We use the $256 \times 256$ pixel grayscale cameraman image (Figure \ref{fig:image_cameraman}). 
+In this project a $256 \times 256$ pixel grayscale cameraman image (Figure \ref{fig:image_cameraman}) is used. 
 The image is saved in the TelosB flash as a binary file. Each pixel is represented with one byte, which gives a grayscale resolution of 256 shades.
 
 \begin{figure}[ht!]
@@ -16,36 +16,50 @@ The image is saved in the TelosB flash as a binary file. Each pixel is represent
 
 \subsection{Energy Consumption}
 Energy consumption is important when we look at wireless sensor networks. 
-The component with the most energy consumption of the TelosB is the radio circuitry as seen in the TelosB datasheet\cite{dataSheet}. 
+The component with the most energy consumption is the radio circuitry of the TelosB.
+This can be seen in the TelosB datasheet\cite{dataSheet}. 
 The challenge is to choose when to use the radio and how often. 
-Comparing the radio current (23 mA) with the processing current (1.8 mA), it is indicating that a lot of processing is possible, before the power consumption gets larger than the cost of sending. 
+Comparing the radio current (23 mA) with the processing current (1.8 mA), it is indicated that a lot of processing is possible, before the power consumption gets larger than the cost of sending. 
 
 \subsection{Compression}
 
-We use three different lossy compression algorithms in this project.
+Three different lossy compression algorithms is used in this project.
 They have a simple implementation and are fast to compute, but they are not very good at retaining image quality compared to e.g. JPEG which uses discrete cosine transform and Huffman coding.
 
-Our algorithms are fast to compute since they mostly use cheap operations like bit swifting and bitwise AND/OR, and only iterates through the data once.
+The algorithms are fast to compute since they mostly use cheap operations like bit swifting and bitwise AND/OR, and only iterates through the data once.
 Lower computation time also means that the energy consumption is lower.
 
-Our compression algorithms work by throwing away the least significant bit/bits from every byte in the image.
+The compression algorithms work by throwing away the least significant bit/bits from every byte in the image.
 For instance the four bit compression takes two bytes, \texttt{aaaa\_\_\_\_} and \texttt{bbbb\_\_\_\_}, and compresses them to a single byte \texttt{aaaabbbb}, where \texttt{a}, \texttt{b} and \texttt{\_} is a bit. Using this method, the image has been compressed 50\%.
 
 
-\subsubsection{One Bit Compression} % (fold)
+\subsubsection{N-Bit Compression} % (fold)
 \label{sub:one_bit_compression}
 
-The One Bit Compression gives a compression of $\dfrac{1\ bit}{8\ bit} = 12.5\%$.
-The algorithm takes 8 bytes and maps them into 7 bytes where the least significant bit, of each byte, is lost.
+The N-Bit Compression gives a compression of $\dfrac{N\ bit}{8\ bit}$.
+The algorithm takes 8 bytes and maps them into $8-N$ bytes where the N least significant bits, of each byte, is lost.
 
-\subsubsection{Two bit compression} % (fold)
-\label{sub:two_bit_compression}
+In this project N = \{1,2,4\}. The compression rate is seen in \ref{tab:compressionrate}.
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ll}
+	\hline
+		N & Compression rate \\ \hline
+		1 & 12.5\% \\ 
+		2 & 25\% \\ 
+		4 & 50\% \\ \hline
+	\end{tabular}
+	\caption{Compression rates for N = \{1,2,4\}}
+	\label{tab:compressionrate}
+\end{table}
+% \subsubsection{Two bit compression} % (fold)
+% \label{sub:two_bit_compression}
 
-The Two Bit Compression gives a compression of $\dfrac{2\ bit}{8\ bit} = 25\%$.
-The algorithm takes 4 bytes and maps them into 3 bytes where the two least significant bits, of each byte, is lost.
+% The Two Bit Compression gives a compression of $\dfrac{2\ bit}{8\ bit} = 25\%$.
+% The algorithm takes 4 bytes and maps them into 3 bytes where the two least significant bits, of each byte, is lost.
 
-\subsubsection{Four bit compression} % (fold)
-\label{sub:four_bit_compression}
+% \subsubsection{Four bit compression} % (fold)
+% \label{sub:four_bit_compression}
 
-The Four Bit Compression gives a compression of $\dfrac{4\ bit}{8\ bit} = 50\%$.
-The algorithm takes 2 bytes and maps them into 1 byte where the four least significant bits, of each byte, is lost.
+% The Four Bit Compression gives a compression of $\dfrac{4\ bit}{8\ bit} = 50\%$.
+% The algorithm takes 2 bytes and maps them into 1 byte where the four least significant bits, of each byte, is lost.
